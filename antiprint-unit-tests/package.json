@@ -1,0 +1,17 @@
+{
+  "name": "antiprint-unit-tests",
+  "version": "1.0.0",
+  "description": "Unit tests for the Antiprint extension for Chrome",
+  "scripts": {
+    "exercise": "karma start",
+    "test": "karma start --single-run"
+  },
+  "author": "Mike Chaberski",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine": "^2.8.0",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.0"
+  }
+}
