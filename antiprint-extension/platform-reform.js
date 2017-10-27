@@ -1071,6 +1071,10 @@
 
 })(typeof window === 'object' ? window : this);
 
+/*
+ *  End of library code
+ */
+
 function PlatformReformer() {
   let signature;
 
@@ -1081,11 +1085,11 @@ function PlatformReformer() {
     return arch;
   }
 
-  const knownLinuxen = ['Ubuntu', 'Debian'];
+  const KNOWN_LINUXEN = ['Ubuntu', 'Debian'];
 
   function constructPlatform(signature) {
     let osName = signature.os.name || '';
-    if (knownLinuxen.indexOf(osName) !== -1) {
+    if (KNOWN_LINUXEN.indexOf(osName) !== -1) {
       osName = 'Linux';
     }
     switch (osName) {
@@ -1109,32 +1113,40 @@ function PlatformReformer() {
 
 (function(settings) {
 
-  const PlatformReform = new PlatformReformer();
+  const platformReformer = new PlatformReformer();
+  const REFORMED_PROPERTIES = ['platform'];
+  const NOOP = x => {};
 
-  function getPlatformProjection() {
-    const signature = internals.parseUserAgentSignature(navigator.userAgent);
-    return signature.platform;
+  /**
+   * Returns the signature property name corresponding to a given navigator
+   * property name.
+   */
+  function mapProperty(navigatorProperty) {
+    // No different names yet
+    return navigatorProperty;
   }
 
-  const NOOP = () => {};
 
-  const navigatorPropertyMapping = {
-    'platform': getPlatformProjection,
-  };
-
-  // https://stackoverflow.com/questions/38808968/change-navigator-platform-on-chrome-firefox-or-ie-to-test-os-detection-code
   const previous = {};
-  Object.keys(navigatorPropertyMapping).forEach(property => {
+  REFORMED_PROPERTIES.forEach(property => {
     previous[property] = navigator[property];
-    Object.defineProperty(navigator, property, {
-      get: function () {
-        if (window.PlatformReformSettings && window.PlatformReformSettings.disabled) {
-          return previous[property];
-        } else {
-          return navigatorPropertyMapping[property]();
-        }
-      },
-      set: NOOP
-     });
+    try {
+      Object.defineProperty(navigator, property, {
+        get: function () {
+          if (window.PlatformReformSettings && window.PlatformReformSettings.disabled) {
+            return previous[property];
+          } else {
+            const signature = platformReformer.parseUserAgentSignature(navigator.userAgent);
+            const signatureProperty = mapProperty(property);
+            return signature[signatureProperty];
+          }
+        },
+        set: NOOP,
+        configurable: true
+       });
+    } catch (err) {
+      console.debug('platform-reform: error defining navigator property', property, err);
+    }
   });
+
 })(window);
