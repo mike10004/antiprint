@@ -4,6 +4,9 @@
     <groupId>com.github.mike10004</groupId>
     <artifactId>antiprint-extension-chrome</artifactId>
     <version>0.2-SNAPSHOT</version>
+    <modules>
+        <module>antiprint-e2e-tests</module>
+    </modules>
     <name>antiprint-extension-chrome</name>
     <description>Antiprint extension for Chrome</description>
     <packaging>pom</packaging>

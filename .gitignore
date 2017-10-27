@@ -5,6 +5,7 @@
 
 /*.swp
 /target/
+/*/target/
 /*.versionsBackup
 /.idea/
 /*.iml

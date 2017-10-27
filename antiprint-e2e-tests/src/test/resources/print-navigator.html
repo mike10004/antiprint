@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Navigator Properties</title>
+    <script>
+        window.navigatorCopy = {};
+        for (const k in window.navigator) {
+            const v = window.navigator[k];
+            if (typeof v !== 'function' && typeof v !== 'object') {
+                window.navigatorCopy[k] = v;
+            }
+        }
+    </script>
+</head>
+<body>
+<pre id="content"></pre>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("content").innerHTML = JSON.stringify(window.navigatorCopy, null, 2);
+    });
+</script>
+</body>
+</html>
