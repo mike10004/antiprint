@@ -1,1 +1,16 @@
-{"product": "Gecko", "vendor": "Google Inc.", "appName": "Netscape", "appCodeName": "Mozilla", "productSub": "20030107", "maxTouchPoints": 0, "onLine": true, "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36", "language": "en-US", "cookieEnabled": true, "appVersion": "5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36", "platform": "Linux x86_64", "vendorSub": "", "hardwareConcurrency": 8}
+{
+  "product": "Gecko",
+  "vendor": "Google Inc.",
+  "language": "en-US",
+  "appName": "Netscape",
+  "appCodeName": "Mozilla",
+  "productSub": "20030107",
+  "cookieEnabled": true,
+  "appVersion": "5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+  "maxTouchPoints": 0,
+  "platform": "Linux x86_64",
+  "vendorSub": "",
+  "hardwareConcurrency": 8,
+  "onLine": true,
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
+}

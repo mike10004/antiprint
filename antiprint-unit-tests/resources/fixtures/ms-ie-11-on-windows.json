@@ -1,1 +1,23 @@
-{"pointerEnabled": true, "webdriver": false, "product": "Gecko", "msManipulationViewsEnabled": true, "language": "en-US", "appName": "Netscape", "appCodeName": "Mozilla", "browserLanguage": "en-US", "msMaxTouchPoints": 0, "cookieEnabled": true, "appVersion": "5.0 (Windows NT 6.3; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729; rv:11.0) like Gecko", "vendor": "", "appMinorVersion": "0", "maxTouchPoints": 0, "platform": "Win32", "systemLanguage": "en-US", "cpuClass": "x86", "onLine": true, "userAgent": "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729; rv:11.0) like Gecko", "msPointerEnabled": true, "userLanguage": "en-US"}
+{
+  "pointerEnabled": true,
+  "webdriver": false,
+  "product": "Gecko",
+  "msManipulationViewsEnabled": true,
+  "language": "en-US",
+  "appName": "Netscape",
+  "appCodeName": "Mozilla",
+  "browserLanguage": "en-US",
+  "msMaxTouchPoints": 0,
+  "cookieEnabled": true,
+  "appVersion": "5.0 (Windows NT 6.3; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729; rv:11.0) like Gecko",
+  "appMinorVersion": "0",
+  "maxTouchPoints": 0,
+  "platform": "Win32",
+  "systemLanguage": "en-US",
+  "userAgent": "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729; rv:11.0) like Gecko",
+  "cpuClass": "x86",
+  "onLine": true,
+  "vendor": "",
+  "msPointerEnabled": true,
+  "userLanguage": "en-US"
+}

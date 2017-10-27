@@ -1,1 +1,17 @@
-{"oscpu": "Windows NT 6.3; WOW64", "product": "Gecko", "vendor": "", "appName": "Netscape", "buildID": "20161031133903", "productSub": "20100101", "onLine": true, "userAgent": "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0", "language": "en-US", "platform": "Win32", "cookieEnabled": true, "appVersion": "5.0 (Windows)", "appCodeName": "Mozilla", "doNotTrack": "unspecified", "vendorSub": ""}
+{
+  "oscpu": "Windows NT 6.3; WOW64",
+  "product": "Gecko",
+  "vendor": "",
+  "language": "en-US",
+  "appName": "Netscape",
+  "buildID": "20161031133903",
+  "appCodeName": "Mozilla",
+  "productSub": "20100101",
+  "cookieEnabled": true,
+  "appVersion": "5.0 (Windows)",
+  "platform": "Win32",
+  "doNotTrack": "unspecified",
+  "onLine": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0",
+  "vendorSub": ""
+}

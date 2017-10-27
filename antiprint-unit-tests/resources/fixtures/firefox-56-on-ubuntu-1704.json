@@ -1,1 +1,18 @@
-{"oscpu": "Linux x86_64", "product": "Gecko", "vendor": "", "language": "en-US", "appName": "Netscape", "buildID": "20171003100843", "productSub": "20100101", "cookieEnabled": true, "appVersion": "5.0 (X11)", "appCodeName": "Mozilla", "doNotTrack": "unspecified", "hardwareConcurrency": 8, "onLine": true, "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:56.0) Gecko/20100101 Firefox/56.0", "platform": "Linux x86_64", "vendorSub": ""}
+{
+  "oscpu": "Linux x86_64",
+  "product": "Gecko",
+  "vendor": "",
+  "language": "en-US",
+  "appName": "Netscape",
+  "buildID": "20171003100843",
+  "productSub": "20100101",
+  "cookieEnabled": true,
+  "appVersion": "5.0 (X11)",
+  "appCodeName": "Mozilla",
+  "doNotTrack": "unspecified",
+  "hardwareConcurrency": 8,
+  "onLine": true,
+  "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:56.0) Gecko/20100101 Firefox/56.0",
+  "platform": "Linux x86_64",
+  "vendorSub": ""
+}

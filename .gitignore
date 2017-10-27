@@ -1,0 +1,11 @@
+/*.pem
+/*.crx
+/*/*.pem
+/*/*.crx
+
+/*.swp
+/target/
+/*.versionsBackup
+/.idea/
+/*.iml
+/*/*.iml

@@ -1,1 +1,18 @@
-{"oscpu": "Intel Mac OS X 10.12", "product": "Gecko", "vendor": "", "language": "en-US", "appName": "Netscape", "buildID": "20161019084923", "productSub": "20100101", "cookieEnabled": true, "appVersion": "5.0 (Macintosh)", "appCodeName": "Mozilla", "doNotTrack": "unspecified", "hardwareConcurrency": 8, "onLine": true, "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:49.0) Gecko/20100101 Firefox/49.0", "platform": "MacIntel", "vendorSub": ""}
+{
+  "oscpu": "Intel Mac OS X 10.12",
+  "product": "Gecko",
+  "vendor": "",
+  "language": "en-US",
+  "appName": "Netscape",
+  "buildID": "20161019084923",
+  "productSub": "20100101",
+  "cookieEnabled": true,
+  "appVersion": "5.0 (Macintosh)",
+  "appCodeName": "Mozilla",
+  "doNotTrack": "unspecified",
+  "hardwareConcurrency": 8,
+  "onLine": true,
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:49.0) Gecko/20100101 Firefox/49.0",
+  "platform": "MacIntel",
+  "vendorSub": ""
+}
