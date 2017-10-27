@@ -15,7 +15,8 @@
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["injector.js"]
+    "js": ["injector.js"],
+    "run_at": "document_start"
   }],
   "permissions": [
     "activeTab",

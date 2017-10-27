@@ -1100,7 +1100,7 @@ function PlatformReformer() {
       default:
         return osName + ' ' + mapArch(signature.cpu.architecture, osName);
     }
-  };
+  }
 
   this.parseUserAgentSignature = function (userAgent) {
     if (typeof signature === 'undefined') {
@@ -1111,7 +1111,7 @@ function PlatformReformer() {
   }
 }
 
-(function(settings) {
+(function() {
 
   const platformReformer = new PlatformReformer();
   const REFORMED_PROPERTIES = ['platform'];
@@ -1125,7 +1125,6 @@ function PlatformReformer() {
     // No different names yet
     return navigatorProperty;
   }
-
 
   const previous = {};
   REFORMED_PROPERTIES.forEach(property => {
@@ -1149,4 +1148,4 @@ function PlatformReformer() {
     }
   });
 
-})(window);
+})();

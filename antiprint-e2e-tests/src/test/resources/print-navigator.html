@@ -4,12 +4,16 @@
     <title>Navigator Properties</title>
     <script>
         window.navigatorCopy = {};
-        for (const k in window.navigator) {
+        const NAVIGATOR_PROPS = ["appCodeName", "appMinorVersion", "appName", "appVersion", "browserLanguage", "buildID", "cookieEnabled", "cpuClass", "doNotTrack", "hardwareConcurrency", "language", "maxTouchPoints", "msManipulationViewsEnabled", "msMaxTouchPoints", "msPointerEnabled", "onLine", "oscpu", "platform", "pointerEnabled", "product", "productSub", "systemLanguage", "userAgent", "userLanguage", "vendor", "vendorSub", "webdriver"];
+        NAVIGATOR_PROPS.forEach(k => {
+            // noinspection JSUnfilteredForInLoop
             const v = window.navigator[k];
-            if (typeof v !== 'function' && typeof v !== 'object') {
+            if (typeof v !== 'function' && typeof v !== 'object' && typeof v !== 'undefined') {
+                // noinspection JSUnfilteredForInLoop
                 window.navigatorCopy[k] = v;
             }
-        }
+        });
+        console.debug(new Date().getTime(), "navigator recorded")
     </script>
 </head>
 <body>

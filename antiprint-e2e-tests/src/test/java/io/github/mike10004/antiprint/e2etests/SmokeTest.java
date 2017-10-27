@@ -33,7 +33,7 @@ class SmokeTest {
     @ParameterizedTest
 //    @ValueSource(strings = {"CHROME/WINDOWS", "CHROME/LINUX", "CHROME/OS_X"})
     @ValueSource(strings = {"CHROME/WINDOWS"})
-    void navigatorProperties(String agentFamilySlashOsFamily) throws IOException, URISyntaxException {
+    void navigatorProperties(String agentFamilySlashOsFamily) throws IOException, URISyntaxException, InterruptedException {
         UserAgentFamily requiredUserAgentFamily = UserAgentFamily.valueOf(agentFamilySlashOsFamily.split("/")[0]);
         OperatingSystemFamily requiredOsFamily = OperatingSystemFamily.valueOf(agentFamilySlashOsFamily.split("/")[1]);
         Map<String, Object> navigator = Tests.getNavigatorTestCasesByUserAgent(userAgent -> {
