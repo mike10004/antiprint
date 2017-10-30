@@ -6,7 +6,7 @@ unique to websites that you visit.
 This extension is neither complete nor correct in achieving that goal. To
 suggest ways to improve it, please open an issue.
 
-## Areas of Concern
+## Coverage Areas
 
 ### User-Agent and navigator.platform conflicts
 
@@ -27,6 +27,14 @@ they were reportedly able to make it work.
 This extension attempts to implement the functionality of changing the value
 of the `navigator.platform` property so that it is consistent with the user
 agent. A future release may support manual specification of the `platform` value.
+
+## Caveats
+
+This extension is incompatible with some other extensions that affect a browser's
+fingerprint. Specifically, errors may occur when this extension is enabled alongside
+other extensions that define properties on `window.navigator` without allowing those
+definitions to be overwritten. An example of this is the excellent 
+[User-Agent Switcher for Chrome](https://chrome.google.com/webstore/detail/user-agent-switcher-for-c/djflhoibgkdhkhhcedjiklpkjnoahfmg). 
 
 ## Acknowledgments
 

@@ -15,12 +15,11 @@
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["injector.js"],
+    "js": ["ua-parser.js", "platform_reform.js", "injector.js"],
     "run_at": "document_start"
   }],
   "permissions": [
     "activeTab",
     "storage"
-  ],
-  "web_accessible_resources": ["platform-reform.js"]
+  ]
 }
