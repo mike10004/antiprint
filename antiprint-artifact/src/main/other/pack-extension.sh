@@ -24,7 +24,7 @@ else
   fi
 fi
 
-rm -f "${EXT_SRC_DIRNAME}.crx"
+rm -vf "${EXT_SRC_DIRNAME}.crx"
 
 "${CHROME}" --disable-gpu --pack-extension="${PWD}/${EXT_SRC_DIRNAME}" "${KEYARG}"
 STATUS=$?

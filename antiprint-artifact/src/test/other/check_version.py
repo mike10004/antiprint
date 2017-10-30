@@ -15,6 +15,7 @@ if __name__ == '__main__':
         required_version = required_version[:-len('-SNAPSHOT')]
     with open(args.crx_manifest, 'r') as ifile:
         manifest = json.load(ifile)
-    if manifest['version'] != required_version:
-        print('manifest version != pom version', file=sys.stderr)
+    manifest_version = manifest['version']
+    if manifest_version != required_version:
+        print("manifest version %s != pom version %s" % (required_version, manifest_version), file=sys.stderr)
         exit(2)

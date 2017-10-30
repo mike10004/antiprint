@@ -94,4 +94,8 @@ public class Tests {
                 .filter(filter)
                 .collect(ImmutableList.toImmutableList());
     }
+
+    public static File getBuildDir() {
+        return new File(getProperty("project.build.directory"));
+    }
 }

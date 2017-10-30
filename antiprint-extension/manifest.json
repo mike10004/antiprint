@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Antiprint",
   "description": "Protect your browser from fingerprinting.",
-  "version": "0.1",
+  "version": "0.2",
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
@@ -15,7 +15,7 @@
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["ua-parser.js", "platform_reform.js", "injector.js"],
+    "js": ["injector.js"],
     "run_at": "document_start"
   }],
   "permissions": [

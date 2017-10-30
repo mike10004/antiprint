@@ -6,6 +6,7 @@
     <version>0.2-SNAPSHOT</version>
     <modules>
         <module>antiprint-e2e-tests</module>
+        <module>antiprint-artifact</module>
     </modules>
     <name>antiprint-extension-chrome</name>
     <description>Antiprint extension for Chrome</description>
@@ -74,85 +75,18 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.4.0</version>
-                <executions>
-                    <execution>
-                      <id>check-version</id>
-                      <phase>prepare-package</phase>
-                      <goals>
-                          <goal>exec</goal>
-                      </goals>
-                      <configuration>
-                          <executable>python</executable>
-                          <arguments>
-                              <argument>${project.basedir}/extra/check_version.py</argument>
-                              <argument>${project.version}</argument>
-                              <argument>${project.basedir}/antiprint-extension/manifest.json</argument>
-                          </arguments>
-                      </configuration>
-                    </execution>
-                    <execution>
-                        <id>package-extension-crx</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>bash</executable>
-                            <arguments>
-                                <argument>${project.basedir}/pack-extension.sh</argument>
-                                <argument>${crx.packExtensionKey}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                  <skip>true</skip>
+                    <filesets>
+                        <fileset>
+                            <directory>${project.basedir}</directory>
+                            <includes>
+                                <include>antiprint-extension.crx</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>install-crx</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <file>${crx.outputPathname}</file>
-                            <packaging>crx</packaging>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-              	<groupId>org.codehaus.mojo</groupId>
-              	<artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.12</version>
-              	<executions>
-                	<execution>
-                  	<id>attach-crx-artifact</id>
-                  	<phase>package</phase>
-                  	<goals>
-                    	<goal>attach-artifact</goal>
-                  	</goals>
-                  	<configuration>
-                    	<artifacts>
-                      	<artifact>
-                        	<file>${crx.outputPathname}</file>
-                        	<type>crx</type>
-                      	</artifact>
-                    	</artifacts>
-                 	  </configuration>
-                	</execution>
-            </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-gpg-plugin</artifactId>
