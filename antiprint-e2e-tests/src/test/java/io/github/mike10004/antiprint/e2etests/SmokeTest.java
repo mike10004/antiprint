@@ -1,5 +1,7 @@
 package io.github.mike10004.antiprint.e2etests;
 
+import com.github.mike10004.xvfbtesting.XvfbRule;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 import com.google.common.net.MediaType;
@@ -9,9 +11,12 @@ import io.github.mike10004.nanochamp.server.NanoResponse;
 import io.github.mike10004.nanochamp.server.NanoServer;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,27 +24,51 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.*;
 
-class SmokeTest {
+@RunWith(Parameterized.class)
+public class SmokeTest {
 
-    @BeforeAll
-    static void setUpChromeWebdriver() {
+    private UserAgentFamily requiredUserAgentFamily;
+    private OperatingSystemFamily requiredOsFamily;
+
+    public SmokeTest(UserAgentFamily userAgentFamily, OperatingSystemFamily osFamily) {
+        this.requiredUserAgentFamily = userAgentFamily;
+        this.requiredOsFamily = osFamily;
+    }
+
+    @BeforeClass
+    public static void setUpChromeWebdriver() {
         ChromeDriverManager.getInstance().setup();
     }
 
-    @ParameterizedTest
-//    @ValueSource(strings = {"CHROME/WINDOWS", "CHROME/LINUX", "CHROME/OS_X"})
-    @ValueSource(strings = {"CHROME/WINDOWS"})
-    void navigatorProperties(String agentFamilySlashOsFamily) throws IOException, URISyntaxException, InterruptedException {
-        UserAgentFamily requiredUserAgentFamily = UserAgentFamily.valueOf(agentFamilySlashOsFamily.split("/")[0]);
-        OperatingSystemFamily requiredOsFamily = OperatingSystemFamily.valueOf(agentFamilySlashOsFamily.split("/")[1]);
+    @Parameters
+    public static List<Object[]> parametersList() {
+        return ImmutableList.<Object[]>builder()
+                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.WINDOWS})
+                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.OS_X})
+                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.LINUX})
+                .build();
+    }
+
+    private static final boolean SHOW_BROWSER_WINDOW = false;
+    private static final boolean PAUSE_BEFORE_CLOSE = false;
+
+    @Rule
+    public XvfbRule xvfb = XvfbRule.builder()
+            .disabledOnWindows()
+            .disabled(SHOW_BROWSER_WINDOW || PAUSE_BEFORE_CLOSE)
+            .build();
+
+    @Test
+    public void navigatorProperties() throws IOException, URISyntaxException, InterruptedException {
         Map<String, Object> navigator = Tests.getNavigatorTestCasesByUserAgent(userAgent -> {
             return userAgent.getFamily() == requiredUserAgentFamily
                     && userAgent.getOperatingSystem().getFamily() == requiredOsFamily;
-        }).stream().findFirst().orElseThrow(() -> new IllegalArgumentException(agentFamilySlashOsFamily));
+        }).stream().findFirst().orElseThrow(() -> new IllegalArgumentException(requiredUserAgentFamily + "/" + requiredOsFamily));
         System.out.println(navigator);
         String userAgent = navigator.get("userAgent").toString();
         byte[] html = Resources.toByteArray(getClass().getResource("/print-navigator.html"));
@@ -47,7 +76,7 @@ class SmokeTest {
                 .get(request -> {
                     return NanoResponse.status(200).content(MediaType.HTML_UTF_8, html).build();
                 }).build();
-        ChromeDriver driver = new ChromeDriverProvider().provide(userAgent);
+        ChromeDriver driver = new ChromeDriverProvider().provide(xvfb.getController().newEnvironment(), userAgent);
         try {
             // the extension is only active if the page URL is http[s]
             try (NanoControl control = server.startServer()) {
@@ -59,10 +88,13 @@ class SmokeTest {
                             .findFirst().orElse(null);
                 });
                 Map<String, Object> actual = Tests.navigatorObjectLoader().apply(CharSource.wrap(json));
+                if (PAUSE_BEFORE_CLOSE) {
+                    synchronized (this) { wait(); }
+                }
                 navigator.forEach((k, v) -> {
                     System.out.format("%s = %s%n", k, actual.get(k));
                     if (isImportant(k)) {
-                        assertEquals(navigator.get(k), actual.get(k), "property: " + k);
+                        assertEquals("property: " + k, navigator.get(k), actual.get(k));
                     }
                 });
             }
@@ -75,15 +107,4 @@ class SmokeTest {
         return "platform".equals(navigatorProperty);
     }
 
-//    private Object getNavigatorPropertyUsingScript(ChromeDriver driver, String property) {
-//        checkArgument(CharMatcher.javaLetterOrDigit().matchesAllOf(property), "illegal property: %s", property);
-////        Object value = driver.executeScript("return window.navigator['" + property + "'];");
-////        return value;
-//        driver.manage().timeouts().setScriptTimeout(5, TimeUnit.SECONDS);
-//        Object value = driver.executeAsyncScript("const callback = arguments[arguments.length - 1]; " +
-//                "window.setTimeout(function() { " +
-//                "  callback(window.navigator['" + property + "']);" +
-//                "}, 1);");
-//        return value;
-//    }
 }

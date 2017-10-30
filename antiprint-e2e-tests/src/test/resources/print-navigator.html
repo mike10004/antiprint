@@ -4,24 +4,33 @@
     <title>Navigator Properties</title>
     <script>
         window.navigatorCopy = {};
-        const NAVIGATOR_PROPS = ["appCodeName", "appMinorVersion", "appName", "appVersion", "browserLanguage", "buildID", "cookieEnabled", "cpuClass", "doNotTrack", "hardwareConcurrency", "language", "maxTouchPoints", "msManipulationViewsEnabled", "msMaxTouchPoints", "msPointerEnabled", "onLine", "oscpu", "platform", "pointerEnabled", "product", "productSub", "systemLanguage", "userAgent", "userLanguage", "vendor", "vendorSub", "webdriver"];
+        const NAVIGATOR_PROPS = [
+            "appCodeName", "appMinorVersion", "appName", "appVersion", "browserLanguage",
+            "buildID",  "cookieEnabled", "cpuClass", "doNotTrack", "hardwareConcurrency",
+            "language", "maxTouchPoints", "msManipulationViewsEnabled", "msMaxTouchPoints",
+            "msPointerEnabled", "onLine", "oscpu", "platform", "pointerEnabled",
+            "product", "productSub", "systemLanguage", "userAgent", "userLanguage",
+            "vendor", "vendorSub", "webdriver"];
         NAVIGATOR_PROPS.forEach(k => {
-            // noinspection JSUnfilteredForInLoop
             const v = window.navigator[k];
             if (typeof v !== 'function' && typeof v !== 'object' && typeof v !== 'undefined') {
-                // noinspection JSUnfilteredForInLoop
                 window.navigatorCopy[k] = v;
             }
         });
-        console.debug(new Date().getTime(), "navigator recorded")
+        console.debug(new Date().getTime(), "test page: navigator recorded", window.navigatorCopy)
     </script>
+    <style>
+#content {
+    font-family: monospace;
+    margin: 12px;
+    white-space: pre;
+}
+    </style>
 </head>
 <body>
-<pre id="content"></pre>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("content").innerHTML = JSON.stringify(window.navigatorCopy, null, 2);
-    });
-</script>
+    <div id="content"><script>
+        document.write(JSON.stringify(window.navigatorCopy, null, 2));
+        </script>
+    </div>
 </body>
 </html>

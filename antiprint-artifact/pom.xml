@@ -53,6 +53,22 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <!-- TODO replace exeuction of `npm test` with frontend-maven-plugin -->
+                    <execution>
+                        <id>run-unit-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>npm</executable>
+                            <workingDirectory>${project.parent.basedir}/antiprint-unit-tests</workingDirectory>
+                            <arguments>
+                                <argument>test</argument>
+                                <argument>--no-color</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>package-extension-crx</id>
                         <phase>package</phase>

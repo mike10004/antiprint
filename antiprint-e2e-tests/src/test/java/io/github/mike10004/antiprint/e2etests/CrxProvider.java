@@ -9,7 +9,10 @@ public class CrxProvider {
         /*
          * Copied by maven-dependency-plugin
          */
-        File crxFile = new File(Tests.getBuildDir(), "dependency");
+        File crxFile = Tests.getBuildDir().toPath()
+                .resolve("dependency")
+                .resolve("antiprint-artifact.crx")
+                .toFile();
         return crxFile;
     }
 

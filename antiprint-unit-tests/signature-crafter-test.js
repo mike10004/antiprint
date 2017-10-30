@@ -14,9 +14,11 @@ describe('parseUserAgentSignature', function(){
   fixtureNames.forEach(fixtureName => {
     it(fixtureName.slice(".json".length), function() {
       console.debug('fixtureName', fixtureName);
-      var testCase = fixtures.get(fixtureName);
-      const actual = new PlatformReformer().parseUserAgentSignature(testCase.userAgent);
+      const testCase = fixtures.get(fixtureName);
+      const actual = new SignatureCrafter({'userAgent': testCase.userAgent}).navigator();
       expect(actual.platform).toEqual(testCase.platform);
     });
   });
 });
+
+/* global describe, it, expect, fixtures, beforeAll, beforeEach */
