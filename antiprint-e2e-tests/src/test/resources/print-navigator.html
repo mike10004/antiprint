@@ -28,9 +28,14 @@
     </style>
 </head>
 <body>
-    <div id="content"><script>
+    <script>
+        /*
+         * You should never use document.write, unless it's in this very specific case,
+         * where we want to know what the browser before the DOM has loaded.
+         */
+        document.write('\n<div id="content">');
         document.write(JSON.stringify(window.navigatorCopy, null, 2));
-        </script>
-    </div>
+        document.write('</div>');
+    </script>
 </body>
 </html>

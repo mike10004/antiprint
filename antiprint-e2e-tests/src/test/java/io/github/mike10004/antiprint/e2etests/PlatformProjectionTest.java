@@ -30,12 +30,12 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
-public class SmokeTest {
+public class PlatformProjectionTest {
 
     private UserAgentFamily requiredUserAgentFamily;
     private OperatingSystemFamily requiredOsFamily;
 
-    public SmokeTest(UserAgentFamily userAgentFamily, OperatingSystemFamily osFamily) {
+    public PlatformProjectionTest(UserAgentFamily userAgentFamily, OperatingSystemFamily osFamily) {
         this.requiredUserAgentFamily = userAgentFamily;
         this.requiredOsFamily = osFamily;
     }
@@ -81,12 +81,15 @@ public class SmokeTest {
             // the extension is only active if the page URL is http[s]
             try (NanoControl control = server.startServer()) {
                 driver.get(control.buildUri().build().toString());
-                String json = new WebDriverWait(driver, 3).until(driver_ -> {
-                    return driver_.findElements(By.id("content")).stream()
-                            .map(WebElement::getText)
-                            .filter(text -> !text.trim().isEmpty())
-                            .findFirst().orElse(null);
-                });
+                /*
+                 * Content is written with document.write, so we don't have to
+                 * use a WebDriverWait to poll the page
+                 */
+                String json = driver.findElements(By.id("content")).stream()
+                        .map(WebElement::getText)
+                        .filter(text -> !text.trim().isEmpty())
+                        .findFirst().orElse(null);
+                assertNotNull("div#content contents", json);
                 Map<String, Object> actual = Tests.navigatorObjectLoader().apply(CharSource.wrap(json));
                 if (PAUSE_BEFORE_CLOSE) {
                     synchronized (this) { wait(); }
