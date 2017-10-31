@@ -1,18 +1,14 @@
 package io.github.mike10004.antiprint.e2etests;
 
-import com.github.mike10004.xvfbtesting.XvfbRule;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 import com.google.common.net.MediaType;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.mike10004.nanochamp.server.NanoControl;
 import io.github.mike10004.nanochamp.server.NanoResponse;
 import io.github.mike10004.nanochamp.server.NanoServer;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
-import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,17 +16,17 @@ import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(Parameterized.class)
-public class PlatformProjectionTest {
+public class PlatformProjectionTest extends BrowserUsingTestBase {
 
     private UserAgentFamily requiredUserAgentFamily;
     private OperatingSystemFamily requiredOsFamily;
@@ -38,11 +34,6 @@ public class PlatformProjectionTest {
     public PlatformProjectionTest(UserAgentFamily userAgentFamily, OperatingSystemFamily osFamily) {
         this.requiredUserAgentFamily = userAgentFamily;
         this.requiredOsFamily = osFamily;
-    }
-
-    @BeforeClass
-    public static void setUpChromeWebdriver() {
-        ChromeDriverManager.getInstance().setup();
     }
 
     @Parameters
@@ -53,15 +44,6 @@ public class PlatformProjectionTest {
                 .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.LINUX})
                 .build();
     }
-
-    private static final boolean SHOW_BROWSER_WINDOW = false;
-    private static final boolean PAUSE_BEFORE_CLOSE = false;
-
-    @Rule
-    public XvfbRule xvfb = XvfbRule.builder()
-            .disabledOnWindows()
-            .disabled(SHOW_BROWSER_WINDOW || PAUSE_BEFORE_CLOSE)
-            .build();
 
     @Test
     public void navigatorProperties() throws IOException, URISyntaxException, InterruptedException {
