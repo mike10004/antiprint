@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Antiprint",
   "description": "Protect your browser from fingerprinting.",
-  "version": "0.2",
+  "version": "0.3",
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
@@ -13,13 +13,19 @@
     "default_popup": "popup.html",
     "default_title": "Antiprint Active"
   },
+  "minimum_chrome_version": "49.0",
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["ua-parser.js", "projection.js", "injector.js"],
+    "js": ["lib/ua-parser.js", "projection.js", "injector.js"],
     "run_at": "document_start"
   }],
+  "background": {
+    "page": "background.html",
+    "persistent": false
+  },
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "privacy"
   ]
 }

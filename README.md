@@ -28,6 +28,14 @@ This extension attempts to implement the functionality of changing the value
 of the `navigator.platform` property so that it is consistent with the user
 agent. A future release may support manual specification of the `platform` value.
 
+## WebRTC private network IP leakage
+
+In Chrome, by default, a script could learn your private network IP address by executing
+code that facilitates good WebRTC (video chat) connections. This extension protects
+against that by changing that setting to a setting that is potentially less efficient
+but only allows scripts access to the public IP address, using code from the 
+[WebRTC Network Limiter extension](https://chrome.google.com/webstore/detail/webrtc-network-limiter/npeicpdbkakmehahjeeohfdhnlpdklia). 
+
 ## Caveats
 
 This extension is incompatible with some other extensions that affect a browser's
