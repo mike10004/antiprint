@@ -58,7 +58,7 @@ public class PlatformProjectionTest extends BrowserUsingTestBase {
                 .get(request -> {
                     return NanoResponse.status(200).content(MediaType.HTML_UTF_8, html).build();
                 }).build();
-        ChromeDriver driver = new ChromeDriverProvider().provide(xvfb.getController().newEnvironment(), userAgent);
+        ChromeDriver driver = new ChromeDriverProvider(userAgent).provide(xvfb.getController().newEnvironment());
         try {
             // the extension is only active if the page URL is http[s]
             try (NanoControl control = server.startServer()) {
@@ -73,9 +73,7 @@ public class PlatformProjectionTest extends BrowserUsingTestBase {
                         .findFirst().orElse(null);
                 assertNotNull("div#content contents", json);
                 Map<String, Object> actual = Tests.navigatorObjectLoader().apply(CharSource.wrap(json));
-                if (PAUSE_BEFORE_CLOSE) {
-                    synchronized (this) { wait(); }
-                }
+                maybePauseUntilKilled();
                 navigator.forEach((k, v) -> {
                     System.out.format("%s = %s%n", k, actual.get(k));
                     if (isImportant(k)) {

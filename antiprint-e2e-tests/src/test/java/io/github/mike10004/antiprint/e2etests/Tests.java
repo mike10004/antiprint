@@ -98,4 +98,8 @@ public class Tests {
     public static File getBuildDir() {
         return new File(getProperty("project.build.directory"));
     }
+
+    public static String chromeDriverVersion() {
+        return "2.33";
+    }
 }

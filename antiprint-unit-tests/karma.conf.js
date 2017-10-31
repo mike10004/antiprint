@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../antiprint-extension/ua-parser.js',
+      '../antiprint-extension/lib/ua-parser.js',
       '../antiprint-extension/projection.js',
       require.resolve('karma-fixture-loader'),
       {

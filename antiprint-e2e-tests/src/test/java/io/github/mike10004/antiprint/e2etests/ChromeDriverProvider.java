@@ -11,13 +11,25 @@ import java.util.Map;
 
 public class ChromeDriverProvider {
 
-    public ChromeDriver provide(String userAgent) throws IOException {
-        return provide(ImmutableMap.of(), userAgent);
+    private final String userAgent;
+
+    public ChromeDriverProvider() {
+        this(null);
     }
 
-    public ChromeDriver provide(Map<String, String> environment, String userAgent) throws IOException {
+    public ChromeDriverProvider(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public ChromeDriver provide() throws IOException {
+        return provide(ImmutableMap.of());
+    }
+
+    public ChromeDriver provide(Map<String, String> environment) throws IOException {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--user-agent=" + userAgent);
+        if (userAgent != null) {
+            options.addArguments("--user-agent=" + userAgent);
+        }
         File crxFile = new CrxProvider().provide();
         options.addExtensions(crxFile);
         ChromeDriverService cds = new ChromeDriverService.Builder()

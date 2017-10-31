@@ -21,7 +21,7 @@ const GOOD_POLICY = chrome.privacy.IPHandlingPolicy.DISABLE_NON_PROXIED_UDP;
     }
 
     if (browserSupportsIPHandlingPolicy()) {
-        pn.webRTCIPHandlingPolicy.get({}, function(details) {
+        chrome.privacy.network.webRTCIPHandlingPolicy.get({}, function(details) {
             if (isPolicyThatExposesIp(details.value)) {
                 chrome.privacy.network.webRTCIPHandlingPolicy.set({
                     value: policy
