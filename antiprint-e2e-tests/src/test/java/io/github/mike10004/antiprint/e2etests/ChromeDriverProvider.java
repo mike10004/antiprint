@@ -5,12 +5,17 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ChromeDriverProvider {
 
+    private CrxProvider crxProvider;
+    @Nullable
     private final String userAgent;
 
     public ChromeDriverProvider() {
@@ -18,7 +23,12 @@ public class ChromeDriverProvider {
     }
 
     public ChromeDriverProvider(String userAgent) {
+        this(CrxProvider.ofDependency(), userAgent);
+    }
+
+    public ChromeDriverProvider(CrxProvider crxProvider, @Nullable  String userAgent) {
         this.userAgent = userAgent;
+        this.crxProvider = checkNotNull(crxProvider);
     }
 
     public ChromeDriver provide() throws IOException {
@@ -30,7 +40,7 @@ public class ChromeDriverProvider {
         if (userAgent != null) {
             options.addArguments("--user-agent=" + userAgent);
         }
-        File crxFile = new CrxProvider().provide();
+        File crxFile = crxProvider.provide();
         options.addExtensions(crxFile);
         ChromeDriverService cds = new ChromeDriverService.Builder()
                 .withEnvironment(environment)
