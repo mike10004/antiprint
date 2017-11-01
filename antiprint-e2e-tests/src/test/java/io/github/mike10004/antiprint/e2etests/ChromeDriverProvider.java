@@ -1,6 +1,7 @@
 package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.collect.ImmutableMap;
+import com.opencsv.CSVReader;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -8,13 +9,17 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ChromeDriverProvider {
 
+    public static final String SYSPROP_EXTRA_CHROME_ARGS = "antiprint.extraChromeArgs";
+
     private CrxProvider crxProvider;
+
     @Nullable
     private final String userAgent;
 
@@ -37,6 +42,8 @@ public class ChromeDriverProvider {
 
     public ChromeDriver provide(Map<String, String> environment) throws IOException {
         ChromeOptions options = new ChromeOptions();
+        String[] extraChromeArgs = getExtraChromeArgs();
+        options.addArguments(extraChromeArgs);
         if (userAgent != null) {
             options.addArguments("--user-agent=" + userAgent);
         }
@@ -46,5 +53,18 @@ public class ChromeDriverProvider {
                 .withEnvironment(environment)
                 .build();
         return new ChromeDriver(cds, options);
+    }
+
+    protected String[] getExtraChromeArgs() {
+        String value = System.getProperty(SYSPROP_EXTRA_CHROME_ARGS);
+        if (value != null) {
+            try {
+                String[] args = new CSVReader(new StringReader(value)).readNext();
+                return args;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return new String[0];
     }
 }
