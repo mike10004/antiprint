@@ -5,5 +5,4 @@ addons:
     - chromium-browser
 before_install:
   - dpkg-query -l xvfb chromium-browser
-  - which chromium-browser || true
-  - which google-chrome || true
+  - chromium-browser --headless --dump-dom https://example.com/
