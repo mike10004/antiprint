@@ -12,11 +12,40 @@
     <artifactId>antiprint-artifact</artifactId>
     <packaging>pom</packaging>
     <properties>
+        <karma.tests.skip>false</karma.tests.skip>
         <crx.packExtensionKey>${antiprint.crx.packExtensionKey}</crx.packExtensionKey>
         <crx.outputPathname>${project.parent.basedir}/antiprint-extension.crx</crx.outputPathname>
     </properties>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId><!-- https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>1.0</version>
+                    <configuration>
+                        <nodeVersion>v8.9.0</nodeVersion>
+                        <npmVersion>5.5.1</npmVersion>
+                        <workingDirectory>${project.parent.basedir}/antiprint-unit-tests</workingDirectory>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.kelveden</groupId>
+                    <artifactId>maven-karma-plugin</artifactId>
+                    <version>1.8</version>
+                    <configuration>
+                        <skipKarma>${karma.tests.skip}</skipKarma>
+                        <configFile>${project.parent.basedir}/antiprint-unit-tests/karma.conf.js</configFile>
+                        <karmaExecutable>${project.parent.basedir}/antiprint-unit-tests/node_modules/karma/bin/karma</karmaExecutable>
+                        <singleRun>true</singleRun>
+                        <autoWatch>false</autoWatch>
+                        <reporters>dots,junit</reporters>
+                        <junitReportFile>${project.build.directory}/surefire-reports/TEST-results-karma.xml</junitReportFile>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -53,22 +82,6 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    <!-- TODO replace exeuction of `npm test` with frontend-maven-plugin -->
-                    <execution>
-                        <id>run-unit-tests</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>npm</executable>
-                            <workingDirectory>${project.parent.basedir}/antiprint-unit-tests</workingDirectory>
-                            <arguments>
-                                <argument>test</argument>
-                                <argument>--no-color</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>package-extension-crx</id>
                         <phase>package</phase>
@@ -85,6 +98,43 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId><!-- https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
+                <artifactId>frontend-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>do-install-node-and-npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>run-npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.kelveden</groupId>
+                <artifactId>maven-karma-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>karma-start</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <browsers>ChromeHeadless</browsers>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>

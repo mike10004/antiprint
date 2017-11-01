@@ -66,13 +66,23 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['ChromeHeadless'],
 
+    plugins: [
+        'karma-jasmine',
+        'karma-chrome-launcher',
+        'karma-junit-reporter',
+    ],
 
-    // Continuous Integration mode
+    junitReporter : {
+        outputFile: 'target/surefire-reports/TEST-results-karma.xml',
+        suite: 'unit'
+    },
+
+      // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: 1
   })
-}
+};
