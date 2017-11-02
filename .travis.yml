@@ -6,4 +6,4 @@ addons:
 before_install:
   - dpkg-query -l xvfb chromium-browser
   - chromium-browser --headless --dump-dom https://example.com/
-script: mvn -B verify -Dantiprint.extraChromeArgs=--no-sandbox
+script: mvn -B verify -Pcrx-xvfb-run -Dantiprint.chrome.extraArgs=--no-sandbox -Dchrome.executablePath=/usr/bin/chromium-browser
