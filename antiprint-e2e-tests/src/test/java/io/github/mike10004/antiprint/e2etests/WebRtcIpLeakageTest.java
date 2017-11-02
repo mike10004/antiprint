@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 public class WebRtcIpLeakageTest extends BrowserUsingTestBase {
 
-    @Test
+    @Test(timeout = 15000)
     public void confirmNoLeakage() throws Exception {
         ChromeDriver driver = new ChromeDriverProvider().provide(xvfb.getController().newEnvironment());
         String rawInfo;

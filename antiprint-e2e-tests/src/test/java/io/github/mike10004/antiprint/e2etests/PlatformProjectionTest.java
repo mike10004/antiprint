@@ -45,7 +45,7 @@ public class PlatformProjectionTest extends BrowserUsingTestBase {
                 .build();
     }
 
-    @Test
+    @Test(timeout = 15000)
     public void navigatorProperties() throws IOException, URISyntaxException, InterruptedException {
         Map<String, Object> navigator = Tests.getNavigatorTestCasesByUserAgent(userAgent -> {
             return userAgent.getFamily() == requiredUserAgentFamily

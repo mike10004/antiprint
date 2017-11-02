@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 
 public class BrowserUsingTestBase {
+
     @BeforeClass
     public static void setUpChromeWebdriver() {
         ChromeDriverManager.getInstance().version(Tests.chromeDriverVersion()).setup();
