@@ -16,6 +16,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -25,17 +29,54 @@ import static org.junit.Assert.assertEquals;
 
 public class WebRtcIpLeakageTest extends BrowserUsingTestBase {
 
-    @Test(timeout = 15000)
-    public void confirmNoLeakage() throws Exception {
-        ChromeDriver driver = new ChromeDriverProvider().provide(xvfb.getController().newEnvironment());
-        String rawInfo;
+    private interface Fixture<T extends Closeable> {
+        T startServer() throws IOException;
+        URL getUrl(T serverControl) throws MalformedURLException, URISyntaxException;
+    }
+
+    @Test(timeout = 10000)
+    public void confirmNoLeakage_local() throws Exception {
         byte[] pageHtmlBytes = Resources.toByteArray(getClass().getResource("/leak-ip-thru-webrtc.html"));
         NanoServer server = NanoServer.builder()
                 .get(NanoResponse.status(200).content(MediaType.HTML_UTF_8, pageHtmlBytes).build())
                 .build();
-        try (NanoControl control = server.startServer()) {
+        confirmNoLeakage(new Fixture<NanoControl>() {
+
+            @Override
+            public NanoControl startServer() throws IOException {
+                return server.startServer();
+            }
+
+            @Override
+            public URL getUrl(NanoControl control) throws MalformedURLException, URISyntaxException {
+                return control.buildUri().build().toURL();
+            }
+        });
+    }
+
+    @org.junit.Ignore // our network filters this URL, but in theory it should work
+    @Test(timeout = 15000)
+    public void confirmNoLeakage_remote() throws Exception {
+        confirmNoLeakage(new Fixture<Closeable>() {
+
+            @Override
+            public Closeable startServer() throws IOException {
+                return () -> {};
+            }
+
+            @Override
+            public URL getUrl(Closeable control) throws MalformedURLException, URISyntaxException {
+                return new URL("https://mike10004.github.io/webrtc-ips/");
+            }
+        });
+    }
+
+    private <T extends Closeable> void confirmNoLeakage(Fixture<T> fixture) throws Exception {
+        ChromeDriver driver = new ChromeDriverProvider().provide(xvfb.getController().newEnvironment());
+        String rawInfo;
+        try (T control = fixture.startServer()) {
             try {
-                URL url = control.buildUri().build().toURL();
+                URL url = fixture.getUrl(control);
                 driver.get(url.toString());
                 rawInfo = new WebDriverWait(driver, 5).until(driver_ -> {
                     return Strings.emptyToNull(driver_.findElements(By.id("raw")).stream().map(WebElement::getText).findFirst().orElse(null));
