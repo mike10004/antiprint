@@ -1,5 +1,6 @@
 package io.github.mike10004.antiprint.e2etests;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVReader;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -8,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
@@ -16,7 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ChromeDriverProvider {
 
-    public static final String SYSPROP_EXTRA_CHROME_ARGS = "antiprint.extraChromeArgs";
+    public static final String SYSPROP_EXTRA_CHROME_ARGS = "antiprint.chrome.extraArgs";
+    public static final String SYSPROP_CHROME_EXECUTABLE_PATH = "antiprint.chrome.executablePath";
 
     private CrxProvider crxProvider;
 
@@ -49,6 +52,17 @@ public class ChromeDriverProvider {
         }
         File crxFile = crxProvider.provide();
         options.addExtensions(crxFile);
+        String executablePath = System.getProperty(SYSPROP_CHROME_EXECUTABLE_PATH);
+        if (!Strings.isNullOrEmpty(executablePath)) {
+            File executableFile = new File(executablePath);
+            if (!executableFile.isFile()) {
+                throw new FileNotFoundException(executablePath);
+            }
+            if (!executableFile.canExecute()) {
+                throw new IOException("not executable: " + executableFile);
+            }
+            options.setBinary(executableFile);
+        }
         ChromeDriverService cds = new ChromeDriverService.Builder()
                 .withEnvironment(environment)
                 .build();

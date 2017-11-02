@@ -13,7 +13,7 @@
 
     <properties>
         <junit.jupiter.version>5.0.1</junit.jupiter.version>
-        <antiprint.extraChromeArgs></antiprint.extraChromeArgs>
+        <chrome.extraArgs></chrome.extraArgs>
     </properties>
 
     <build>
@@ -36,7 +36,8 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
-                            <antiprint.extraChromeArgs>${antiprint.extraChromeArgs}</antiprint.extraChromeArgs>
+                            <antiprint.chrome.executablePath>${chrome.executablePath}</antiprint.chrome.executablePath>
+                            <antiprint.chrome.extraArgs>${chrome.extraArgs}</antiprint.chrome.extraArgs>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

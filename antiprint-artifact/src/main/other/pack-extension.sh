@@ -2,9 +2,18 @@
 
 PROG="pack-extension"
 
-CHROME=$(which google-chrome || which chromium-browser)
-if [ -z "${CHROME}" ] ; then
-  echo "${PROG}: chrome is not installed or executable is not on PATH" >&2
+if [ -z "${CHROME_EXECUTABLE}" ] ; then
+  CHROME=$(which google-chrome || which chromium-browser)
+  if [ -z "${CHROME}" ] ; then
+    echo "${PROG}: chrome is not installed or executable is not on PATH" >&2
+    exit 1
+  fi
+else
+  CHROME="${CHROME_EXECUTABLE}"
+fi
+
+if [ ! -f "${CHROME}" ] ; then
+  echo "${PROG}: not found: ${CHROME}" >&2
   exit 1
 fi
 
@@ -26,11 +35,11 @@ fi
 
 rm -vf "${EXT_SRC_DIRNAME}.crx"
 
-"${CHROME}" --disable-gpu --pack-extension="${PWD}/${EXT_SRC_DIRNAME}" "${KEYARG}"
+"${CHROME}" --disable-gpu --no-sandbox --pack-extension="${PWD}/${EXT_SRC_DIRNAME}" "${KEYARG}"
 STATUS=$?
-if [ $STATUS -ne 0 ] ; then
+if [ ${STATUS} -ne 0 ] ; then
   echo "${PROG}: ${CHROME} exited with status ${STATUS}"
-  exit $STATUS
+  exit ${STATUS}
 fi
 
 if [ ! -f "${PWD}/${EXT_SRC_DIRNAME}.crx" ] ; then

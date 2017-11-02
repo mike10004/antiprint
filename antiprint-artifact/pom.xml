@@ -15,11 +15,31 @@
         <karma.tests.skip>false</karma.tests.skip>
         <crx.packExtensionKey>${antiprint.crx.packExtensionKey}</crx.packExtensionKey>
         <crx.outputPathname>${project.parent.basedir}/antiprint-extension.crx</crx.outputPathname>
+        <crx.xvfbRun.disabled>true</crx.xvfbRun.disabled>
+        <crx.xvfbRun.enabled>false</crx.xvfbRun.enabled>
     </properties>
-
+    <profiles>
+        <profile>
+            <id>crx-xvfb-run</id>
+            <properties>
+                <crx.xvfbRun.disabled>false</crx.xvfbRun.disabled>
+                <crx.xvfbRun.enabled>true</crx.xvfbRun.enabled>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.4.0</version>
+                    <configuration>
+                        <environmentVariables>
+                            <CHROME_EXECUTABLE>${chrome.executablePath}</CHROME_EXECUTABLE>
+                        </environmentVariables>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>com.github.eirslett</groupId><!-- https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
                     <artifactId>frontend-maven-plugin</artifactId>
@@ -41,7 +61,7 @@
                         <singleRun>true</singleRun>
                         <autoWatch>false</autoWatch>
                         <reporters>dots,junit</reporters>
-                        <junitReportFile>${project.build.directory}/surefire-reports/TEST-results-karma.xml</junitReportFile>
+                        <junitReportFile>${project.build.directory}/failsafe-reports/TEST-results-karma.xml</junitReportFile>
                     </configuration>
                 </plugin>
             </plugins>
@@ -64,7 +84,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.4.0</version>
                 <executions>
                     <execution>
                         <id>check-version</id>
@@ -89,9 +108,27 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
+                            <skip>${crx.xvfbRun.enabled}</skip>
                             <executable>bash</executable>
                             <workingDirectory>${project.parent.basedir}</workingDirectory>
                             <arguments>
+                                <argument>${project.basedir}/src/main/other/pack-extension.sh</argument>
+                                <argument>${crx.packExtensionKey}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>package-extension-crx-xvfb</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${crx.xvfbRun.disabled}</skip>
+                            <executable>xvfb-run</executable>
+                            <workingDirectory>${project.parent.basedir}</workingDirectory>
+                            <arguments>
+                                <argument>--auto-servernum</argument>
                                 <argument>${project.basedir}/src/main/other/pack-extension.sh</argument>
                                 <argument>${crx.packExtensionKey}</argument>
                             </arguments>

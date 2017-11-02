@@ -46,8 +46,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <crx.packExtensionKey>${antiprint.crx.packExtensionKey}</crx.packExtensionKey>
-        <crx.outputPathname>${project.basedir}/antiprint-extension.crx</crx.outputPathname>
+        <chrome.executablePath></chrome.executablePath> <!-- empty means auto-detected by chromedriver -->
     </properties>
     <build>
         <pluginManagement>
