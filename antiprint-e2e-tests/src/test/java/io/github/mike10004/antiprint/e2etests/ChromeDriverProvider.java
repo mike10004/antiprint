@@ -70,15 +70,18 @@ public class ChromeDriverProvider {
     }
 
     protected String[] getExtraChromeArgs() {
-        String value = System.getProperty(SYSPROP_EXTRA_CHROME_ARGS);
-        if (value != null) {
+        String value = System.getProperty(SYSPROP_EXTRA_CHROME_ARGS, "").trim();
+        final String[] args;
+        if (!value.isEmpty()) {
             try {
-                String[] args = new CSVReader(new StringReader(value)).readNext();
+                args = new CSVReader(new StringReader(value)).readNext();
                 return args;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        } else {
+            args = new String[0];
         }
-        return new String[0];
+        return args;
     }
 }
