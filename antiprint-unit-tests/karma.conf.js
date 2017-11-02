@@ -64,7 +64,14 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['ChromeHeadless'],
+    browsers: ['ChromiumHeadless', 'ChromiumHeadlessDockerable'],
+
+    customLaunchers: {
+        ChromiumHeadlessDockerable: {
+          base: 'ChromiumHeadless',
+          flags: ['--disable-gpu', '--no-sandbox']
+        }
+    },
 
     plugins: [
         'karma-jasmine',
@@ -73,7 +80,7 @@ module.exports = function(config) {
     ],
 
     junitReporter : {
-        outputFile: 'target/surefire-reports/TEST-results-karma.xml',
+        outputFile: '../../antiprint-artifact/target/failsafe-reports/TEST-results-karma.xml',
         suite: 'unit'
     },
 

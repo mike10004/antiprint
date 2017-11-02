@@ -151,7 +151,7 @@
         <dependency>
             <groupId>com.github.mike10004</groupId>
             <artifactId>xvfb-testing</artifactId>
-            <version>0.10</version>
+            <version>0.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>

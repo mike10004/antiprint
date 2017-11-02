@@ -170,7 +170,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <browsers>ChromeHeadless</browsers>
+                    <browsers>ChromiumHeadlessDockerable</browsers>
                 </configuration>
             </plugin>
             <plugin>

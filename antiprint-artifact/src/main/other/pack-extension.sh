@@ -33,7 +33,9 @@ else
   fi
 fi
 
-rm -vf "${EXT_SRC_DIRNAME}.crx"
+CRX_PATH="${PWD}/${EXT_SRC_DIRNAME}.crx"
+
+rm -vf "${CRX_PATH}"
 
 "${CHROME}" --disable-gpu --no-sandbox --pack-extension="${PWD}/${EXT_SRC_DIRNAME}" "${KEYARG}"
 STATUS=$?
@@ -42,9 +44,9 @@ if [ ${STATUS} -ne 0 ] ; then
   exit ${STATUS}
 fi
 
-if [ ! -f "${PWD}/${EXT_SRC_DIRNAME}.crx" ] ; then
+if [ ! -f "${CRX_PATH}" ] ; then
   echo "${PROG}: extension was not created but Chrome exited clean" >&2
   exit 2
 fi
 
-echo "${PWD}/${EXT_SRC_DIRNAME}.crx"
+echo "${CRX_PATH}"
