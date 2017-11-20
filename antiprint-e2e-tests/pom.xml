@@ -5,7 +5,7 @@
     <parent>
         <artifactId>antiprint-extension-chrome</artifactId>
         <groupId>com.github.mike10004</groupId>
-        <version>0.2</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,6 +32,7 @@
                     <version>2.20.1</version>
                     <configuration>
                         <systemPropertyVariables>
+                            <java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
                             <antiprint.chrome.executablePath>${chrome.executablePath}</antiprint.chrome.executablePath>
                             <antiprint.chrome.extraArgs>${chrome.extraArgs}</antiprint.chrome.extraArgs>
                         </systemPropertyVariables>
@@ -102,7 +103,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>3.5.3</version>
+            <version>3.7.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -126,7 +127,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>2.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -156,7 +157,7 @@
         <dependency>
             <groupId>com.github.mike10004</groupId>
             <artifactId>xvfb-testing</artifactId>
-            <version>0.10</version>
+            <version>0.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
