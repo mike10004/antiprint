@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -26,24 +27,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(Parameterized.class)
-public class PlatformProjectionTest extends BrowserUsingTestBase {
+public abstract class PlatformProjectionTestBase extends ChromeUsingTestBase {
 
-    private UserAgentFamily requiredUserAgentFamily;
-    private OperatingSystemFamily requiredOsFamily;
+    protected UserAgentFamily requiredUserAgentFamily;
+    protected OperatingSystemFamily requiredOsFamily;
 
-    public PlatformProjectionTest(UserAgentFamily userAgentFamily, OperatingSystemFamily osFamily) {
+    public PlatformProjectionTestBase(UserAgentFamily userAgentFamily, OperatingSystemFamily osFamily) {
         this.requiredUserAgentFamily = userAgentFamily;
         this.requiredOsFamily = osFamily;
     }
 
-    @Parameters
-    public static List<Object[]> parametersList() {
-        return ImmutableList.<Object[]>builder()
-                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.WINDOWS})
-                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.OS_X})
-                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.LINUX})
-                .build();
+
+
+    protected WebDriver createDriver(String userAgent) throws IOException {
+        return createDriver(userAgent, xvfb.getController().newEnvironment());
     }
+
+    protected abstract WebDriver createDriver(String userAgent, Map<String, String> environment) throws IOException;
 
     @Test(timeout = 15000)
     public void navigatorProperties() throws IOException, URISyntaxException, InterruptedException {
@@ -58,7 +58,7 @@ public class PlatformProjectionTest extends BrowserUsingTestBase {
                 .get(request -> {
                     return NanoResponse.status(200).content(MediaType.HTML_UTF_8, html).build();
                 }).build();
-        ChromeDriver driver = new ChromeDriverProvider(userAgent).provide(xvfb.getController().newEnvironment());
+        WebDriver driver = createDriver(userAgent);
         try {
             // the extension is only active if the page URL is http[s]
             try (NanoControl control = server.startServer()) {

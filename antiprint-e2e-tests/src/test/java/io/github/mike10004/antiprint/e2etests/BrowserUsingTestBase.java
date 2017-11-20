@@ -7,11 +7,6 @@ import org.junit.Rule;
 
 public class BrowserUsingTestBase {
 
-    @BeforeClass
-    public static void setUpChromeWebdriver() {
-        ChromeDriverManager.getInstance().version(Tests.chromeDriverVersion()).setup();
-    }
-
     protected static final boolean SHOW_BROWSER_WINDOW = false;
     protected static final boolean PAUSE_BEFORE_CLOSE = false;
 

@@ -1,8 +1,10 @@
 package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 import com.google.common.net.MediaType;
@@ -23,11 +25,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
-public class WebRtcIpLeakageTest extends BrowserUsingTestBase {
+public class WebRtcIpLeakageTest extends ChromeUsingTestBase {
 
     private interface Fixture<T extends Closeable> {
         T startServer() throws IOException;
@@ -54,7 +57,6 @@ public class WebRtcIpLeakageTest extends BrowserUsingTestBase {
         });
     }
 
-    @org.junit.Ignore // our network filters this URL, but in theory it should work
     @Test(timeout = 15000)
     public void confirmNoLeakage_remote() throws Exception {
         confirmNoLeakage(new Fixture<Closeable>() {
@@ -88,10 +90,10 @@ public class WebRtcIpLeakageTest extends BrowserUsingTestBase {
         }
         System.out.println(rawInfo);
         List<String> ipAddresses = CharSource.wrap(rawInfo).readLines().stream()
-                .filter(line -> line.startsWith("a=candidate:"))
                 .flatMap(line -> Splitter.on(CharMatcher.whitespace()).trimResults().omitEmptyStrings().splitToList(line).stream())
                 .filter(token -> InetAddressValidator.getInstance().isValid(token))
                 .collect(Collectors.toList());
-        assertEquals("ip address in info", Collections.emptyList(), ipAddresses);
+        Predicate<String> allowedIpAddresses = Predicates.in(ImmutableSet.of("127.0.0.1", "0.0.0.0", "127.0.1.1"));
+        assertEquals("ip address in info", Collections.emptyList(), ipAddresses.stream().filter(allowedIpAddresses.negate()).collect(Collectors.toList()));
     }
 }
