@@ -23,9 +23,6 @@ import static org.junit.Assert.assertNotNull;
 
 public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<WebDriver, String> {
 
-    @Rule
-    public Timeout timeout = Timeout.seconds(TIMEOUT_SECONDS);
-
     protected void testNavigatorProperties(UserAgentFamily requiredUserAgentFamily, OperatingSystemFamily requiredOsFamily) throws IOException, URISyntaxException, InterruptedException {
         Map<String, Object> navigator = Tests.getNavigatorTestCasesByUserAgent(userAgent -> {
             return userAgent.getFamily() == requiredUserAgentFamily

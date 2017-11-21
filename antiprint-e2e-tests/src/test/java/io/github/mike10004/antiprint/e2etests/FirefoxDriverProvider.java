@@ -37,8 +37,8 @@ public class FirefoxDriverProvider implements WebDriverProvider<FirefoxDriver> {
             options.addPreference("general.useragent.override", userAgent);
         }
         options.setProfile(profile);
-
         GeckoDriverService service = new GeckoDriverService.Builder()
+                .usingAnyFreePort()
                 .withEnvironment(environment)
                 .build();
         FirefoxDriver driver = new FirefoxDriver(service, options);

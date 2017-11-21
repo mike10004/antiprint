@@ -20,10 +20,13 @@
     "run_at": "document_start"
   }],
   "background": {
-    "page": "background.html",
+    "scripts": ["webrtc-policy.js"],
     "persistent": false
   },
   "permissions": [
     "privacy"
+  ],
+  "web_accessible_resources": [
+    "browser-settings.html"
   ]
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script src="browser-settings.js"></script>
+    <style>
+        #settings {
+            display: table;
+        }
+
+        #settings > * {
+            display: table-row;
+        }
+
+        #settings > * > * {
+            display: table-cell;
+            padding: 10px;
+        }
+
+        #settings > *:first-child {
+            display: table-header-group;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+    <body>
+        <h1>Privacy-Related Settings</h1>
+        <div id="settings">
+            <div>
+                <div>Setting</div>
+                <div>Value</div>
+            </div>
+            <div>
+                <div>browser.privacy.network.webRTCIPHandlingPolicy</div>
+                <div id="webRTCIPHandlingPolicy"></div>
+            </div>
+        </div>
+    </body>
+</html>

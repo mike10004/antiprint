@@ -1,17 +1,14 @@
 package io.github.mike10004.antiprint.e2etests;
 
-import org.apache.commons.io.FileUtils;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.io.ByteSource;
+import io.github.mike10004.crxtool.CrxParser;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
-import java.util.Collection;
-import java.util.Objects;
-
-import static com.google.common.base.Preconditions.checkState;
+import java.io.InputStream;
 
 public interface CrxProvider {
 
@@ -52,28 +49,26 @@ public interface CrxProvider {
     }
 
     static boolean isUpToDate(File crxFile) throws IOException {
-        BasicFileAttributes crxAttributes = Files.readAttributes(crxFile.toPath(), BasicFileAttributes.class);
-        FileTime crxLastModified = crxAttributes.lastModifiedTime();
-        File extensionSourcesDir = new File(Tests.getProperties().getProperty("project.parent.basedir"), "antiprint-extension");
-        Collection<File> extensionSourceFiles = FileUtils.listFiles(extensionSourcesDir, null, true);
-        FileTime latestSourceLastModified = extensionSourceFiles.stream().map(f -> {
-            try {
-                return Files.readAttributes(f.toPath(), BasicFileAttributes.class);
-            } catch (IOException e) {
-                e.printStackTrace(System.err);
-                return null;
-            }
-        }).filter(Objects::nonNull)
-          .map(BasicFileAttributes::lastModifiedTime)
-          .max(FileTime::compareTo)
-          .orElse(null);
-        checkState(latestSourceLastModified != null);
-        boolean sourcesModifiedLaterThanCrx = latestSourceLastModified.toInstant().isAfter(crxLastModified.toInstant());
-        if (sourcesModifiedLaterThanCrx) {
-            System.err.format("latest last modified date of crx source file: %s%n", latestSourceLastModified);
-            System.err.format("crx last modified: %s (%s)%n", crxLastModified, crxFile);
+        Unzippage crxUnzipped;
+        try (InputStream in = new FileInputStream(crxFile)) {
+            CrxParser.getDefault().parseMetadata(in);
+            crxUnzipped = Unzippage.unzip(in);
         }
-        return !sourcesModifiedLaterThanCrx;
+        File extensionSourcesDir = new File(Tests.getProperties().getProperty("project.parent.basedir"), "antiprint-extension");
+        Unzippage expected = Tests.pseudoUnzippage(extensionSourcesDir.toPath());
+        if (!Tests.filesEqual(expected, crxUnzipped)) {
+            for (String entry : expected.fileEntries()) {
+                if (ImmutableSet.copyOf(crxUnzipped.fileEntries()).contains(entry)) {
+                    System.err.format("crx does not have file: %s%n", entry);
+                }
+                ByteSource actual = crxUnzipped.getFileBytes(entry);
+                if (!expected.getFileBytes(entry).contentEquals(actual)) {
+                    System.err.format("needs to be updated: %s%n", entry);
+                }
+            }
+            return false;
+        }
+        return true;
     }
 
 }
