@@ -16,6 +16,26 @@
         <chrome.extraArgs></chrome.extraArgs>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>allow-outdated-crx</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <configuration>
+                                <systemPropertyVariables>
+                                    <antiprint.e2e.tests.allowOutdatedCrxFile>true</antiprint.e2e.tests.allowOutdatedCrxFile>
+                                </systemPropertyVariables>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -35,6 +55,7 @@
                             <java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
                             <antiprint.chrome.executablePath>${chrome.executablePath}</antiprint.chrome.executablePath>
                             <antiprint.chrome.extraArgs>${chrome.extraArgs}</antiprint.chrome.extraArgs>
+                            <antiprint.e2e.tests.allowOutdatedCrxFile>false</antiprint.e2e.tests.allowOutdatedCrxFile>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
