@@ -7,7 +7,7 @@ public class ChromeUsingTestBase extends BrowserUsingTestBase {
 
     @BeforeClass
     public static void setUpChromeWebdriver() {
-        ChromeDriverManager.getInstance().version(Tests.chromeDriverVersion()).setup();
+        ChromeDriverManager.getInstance().version(Tests.chromedriverVersion()).setup();
     }
 
 }

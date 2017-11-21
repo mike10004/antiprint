@@ -172,6 +172,11 @@
             <version>3.5</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.mike10004</groupId>
+            <artifactId>crxtool</artifactId>
+            <version>0.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

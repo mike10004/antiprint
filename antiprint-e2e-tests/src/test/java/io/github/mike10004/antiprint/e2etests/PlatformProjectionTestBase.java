@@ -1,6 +1,5 @@
 package io.github.mike10004.antiprint.e2etests;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 import com.google.common.net.MediaType;
@@ -9,35 +8,23 @@ import io.github.mike10004.nanochamp.server.NanoResponse;
 import io.github.mike10004.nanochamp.server.NanoServer;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.Rule;
+import org.junit.rules.Timeout;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(Parameterized.class)
-public abstract class PlatformProjectionTestBase extends ChromeUsingTestBase {
+public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase {
 
-    protected UserAgentFamily requiredUserAgentFamily;
-    protected OperatingSystemFamily requiredOsFamily;
-
-    public PlatformProjectionTestBase(UserAgentFamily userAgentFamily, OperatingSystemFamily osFamily) {
-        this.requiredUserAgentFamily = userAgentFamily;
-        this.requiredOsFamily = osFamily;
-    }
-
-
+    @Rule
+    public Timeout timeout = Timeout.seconds(TIMEOUT_SECONDS);
 
     protected WebDriver createDriver(String userAgent) throws IOException {
         return createDriver(userAgent, xvfb.getController().newEnvironment());
@@ -45,8 +32,7 @@ public abstract class PlatformProjectionTestBase extends ChromeUsingTestBase {
 
     protected abstract WebDriver createDriver(String userAgent, Map<String, String> environment) throws IOException;
 
-    @Test(timeout = 15000)
-    public void navigatorProperties() throws IOException, URISyntaxException, InterruptedException {
+    protected void testNavigatorProperties(UserAgentFamily requiredUserAgentFamily, OperatingSystemFamily requiredOsFamily) throws IOException, URISyntaxException, InterruptedException {
         Map<String, Object> navigator = Tests.getNavigatorTestCasesByUserAgent(userAgent -> {
             return userAgent.getFamily() == requiredUserAgentFamily
                     && userAgent.getOperatingSystem().getFamily() == requiredOsFamily;

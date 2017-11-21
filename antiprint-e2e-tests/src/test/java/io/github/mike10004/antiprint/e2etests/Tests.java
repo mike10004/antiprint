@@ -3,6 +3,7 @@ package io.github.mike10004.antiprint.e2etests;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
@@ -13,14 +14,21 @@ import net.sf.uadetector.service.UADetectorServiceFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
+import java.nio.file.Path;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -99,7 +107,11 @@ public class Tests {
         return new File(getProperty("project.build.directory"));
     }
 
-    public static String chromeDriverVersion() {
+    public static String chromedriverVersion() {
         return "2.33";
+    }
+
+    public static String geckodriverVersion() {
+        return "0.19.1";
     }
 }

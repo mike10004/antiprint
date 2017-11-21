@@ -9,6 +9,7 @@ public class BrowserUsingTestBase {
 
     protected static final boolean SHOW_BROWSER_WINDOW = false;
     protected static final boolean PAUSE_BEFORE_CLOSE = false;
+    protected static final int TIMEOUT_SECONDS = 15;
 
     @Rule
     public final XvfbRule xvfb = XvfbRule.builder()

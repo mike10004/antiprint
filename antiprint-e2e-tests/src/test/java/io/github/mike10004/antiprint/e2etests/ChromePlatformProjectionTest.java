@@ -1,19 +1,19 @@
 package io.github.mike10004.antiprint.e2etests;
 
-import com.google.common.collect.ImmutableList;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class ChromePlatformProjectionTest extends PlatformProjectionTestBase {
 
-    public ChromePlatformProjectionTest(UserAgentFamily userAgentFamily, OperatingSystemFamily osFamily) {
-        super(userAgentFamily, osFamily);
+    @BeforeClass
+    public static void setUp() {
+        ChromeUsingTestBase.setUpChromeWebdriver();
     }
 
     @Override
@@ -21,13 +21,17 @@ public class ChromePlatformProjectionTest extends PlatformProjectionTestBase {
         return new ChromeDriverProvider(userAgent).provide(environment);
     }
 
-    @Parameters
-    public static List<Object[]> parametersList() {
-        return ImmutableList.<Object[]>builder()
-                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.WINDOWS})
-                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.OS_X})
-                .add(new Object[]{UserAgentFamily.CHROME, OperatingSystemFamily.LINUX})
-                .build();
+    @Test
+    public void windows() throws Exception {
+        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.WINDOWS);
     }
 
+    @Test
+    public void osx() throws Exception {
+        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.OS_X);
+    }
+    @Test
+    public void linux() throws Exception {
+        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.LINUX);
+    }
 }
