@@ -21,7 +21,7 @@ function injectProjection(projection) {
 
 }
 
-(function(UAParser, SignatureCrafter){
+(function(){
     const projection = {};
     projection.navigator = new SignatureCrafter({
         'userAgent': window.navigator.userAgent
@@ -31,4 +31,4 @@ function injectProjection(projection) {
     const docHead = document.head || document.documentElement;
     docHead.appendChild(scriptEl);
     scriptEl.remove();
-})(window.UAParser, window.SignatureCrafter);
+})();
