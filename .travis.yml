@@ -4,5 +4,8 @@ addons:
     packages:
     - xvfb
     - chromium-browser
+notifications:
+  email: false
 install: true
 script: mvn -B install -Pcrx-xvfb-run -Dantiprint.chrome.extraArgs=--no-sandbox -Dantiprint.chrome.executablePath=/usr/bin/chromium-browser
+
