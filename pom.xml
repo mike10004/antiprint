@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mike10004</groupId>
-    <artifactId>antiprint-extension-chrome</artifactId>
+    <artifactId>antiprint-extension</artifactId>
     <version>0.3-SNAPSHOT</version>
     <modules>
         <module>antiprint-e2e-tests</module>
         <module>antiprint-artifact</module>
     </modules>
-    <name>antiprint-extension-chrome</name>
+    <name>antiprint-extension</name>
     <description>Antiprint extension for Chrome</description>
     <packaging>pom</packaging>
     <url>https://github.com/mike10004/antiprint</url>
