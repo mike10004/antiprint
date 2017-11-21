@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ChromeDriverProvider {
+public class ChromeDriverProvider implements WebDriverProvider<ChromeDriver> {
 
     public static final String SYSPROP_EXTRA_CHROME_ARGS = "antiprint.chrome.extraArgs";
     public static final String SYSPROP_CHROME_EXECUTABLE_PATH = "antiprint.chrome.executablePath";
@@ -43,6 +43,7 @@ public class ChromeDriverProvider {
         return provide(ImmutableMap.of());
     }
 
+    @Override
     public ChromeDriver provide(Map<String, String> environment) throws IOException {
         ChromeOptions options = new ChromeOptions();
         String[] extraChromeArgs = getExtraChromeArgs();

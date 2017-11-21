@@ -14,8 +14,8 @@ import io.github.mike10004.nanochamp.server.NanoServer;
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.Closeable;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
-public class WebRtcIpLeakageTest extends ChromeUsingTestBase {
+public abstract class WebrtcIpLeakageTestBase extends BrowserUsingTestBase<WebDriver, Void> {
 
     private interface Fixture<T extends Closeable> {
         T startServer() throws IOException;
@@ -74,7 +74,7 @@ public class WebRtcIpLeakageTest extends ChromeUsingTestBase {
     }
 
     private <T extends Closeable> void confirmNoLeakage(Fixture<T> fixture) throws Exception {
-        ChromeDriver driver = new ChromeDriverProvider().provide(xvfb.getController().newEnvironment());
+        WebDriver driver = createWebDriver(null);
         String rawInfo;
         try (T control = fixture.startServer()) {
             try {

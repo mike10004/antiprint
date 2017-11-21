@@ -8,6 +8,8 @@ import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import net.sf.uadetector.ReadableUserAgent;
 import net.sf.uadetector.UserAgentStringParser;
 import net.sf.uadetector.service.UADetectorServiceFactory;
@@ -105,6 +107,14 @@ public class Tests {
 
     public static File getBuildDir() {
         return new File(getProperty("project.build.directory"));
+    }
+
+    public static void setUpGeckodriver() {
+        FirefoxDriverManager.getInstance().version(geckodriverVersion()).setup();
+    }
+
+    public static void setUpChromedriver() {
+        ChromeDriverManager.getInstance().version(chromedriverVersion()).setup();
     }
 
     public static String chromedriverVersion() {

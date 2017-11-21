@@ -6,19 +6,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
-import java.io.IOException;
-import java.util.Map;
-
 public class ChromePlatformProjectionTest extends PlatformProjectionTestBase {
 
     @BeforeClass
     public static void setUp() {
-        ChromeUsingTestBase.setUpChromeWebdriver();
-    }
-
-    @Override
-    protected WebDriver createDriver(String userAgent, Map<String, String> environment) throws IOException {
-        return new ChromeDriverProvider(userAgent).provide(environment);
+        Tests.setUpChromedriver();
     }
 
     @Test
@@ -33,5 +25,10 @@ public class ChromePlatformProjectionTest extends PlatformProjectionTestBase {
     @Test
     public void linux() throws Exception {
         testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.LINUX);
+    }
+
+    @Override
+    protected WebDriverProvider<? extends WebDriver> getWebDriverProvider(String userAgent) {
+        return new ChromeDriverProvider(userAgent);
     }
 }

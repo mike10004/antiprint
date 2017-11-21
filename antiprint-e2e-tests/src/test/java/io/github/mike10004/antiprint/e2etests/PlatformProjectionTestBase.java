@@ -21,16 +21,10 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase {
+public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<WebDriver, String> {
 
     @Rule
     public Timeout timeout = Timeout.seconds(TIMEOUT_SECONDS);
-
-    protected WebDriver createDriver(String userAgent) throws IOException {
-        return createDriver(userAgent, xvfb.getController().newEnvironment());
-    }
-
-    protected abstract WebDriver createDriver(String userAgent, Map<String, String> environment) throws IOException;
 
     protected void testNavigatorProperties(UserAgentFamily requiredUserAgentFamily, OperatingSystemFamily requiredOsFamily) throws IOException, URISyntaxException, InterruptedException {
         Map<String, Object> navigator = Tests.getNavigatorTestCasesByUserAgent(userAgent -> {
@@ -44,7 +38,7 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase {
                 .get(request -> {
                     return NanoResponse.status(200).content(MediaType.HTML_UTF_8, html).build();
                 }).build();
-        WebDriver driver = createDriver(userAgent);
+        WebDriver driver = createWebDriver(userAgent);
         try {
             // the extension is only active if the page URL is http[s]
             try (NanoControl control = server.startServer()) {
