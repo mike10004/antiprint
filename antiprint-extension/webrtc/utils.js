@@ -8,10 +8,6 @@
 
 'use strict';
 
-function browserSupportsIPHandlingPolicy() {
-    return true; // typeof chrome.privacy.network.webRTCIPHandlingPolicy !== 'undefined';
-}
-
 if (typeof window.IPHandlingPolicy === 'undefined') {
 
     const Constant = function(name, value) {

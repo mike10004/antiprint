@@ -8,9 +8,3 @@
 
 'use strict';
 
-if (!browserSupportsIPHandlingPolicy()) {
-    chrome.privacy.network.webRTCMultipleRoutesEnabled.set({
-        value: false
-    });
-}
-

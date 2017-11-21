@@ -20,19 +20,15 @@ const GOOD_POLICY = window.IPHandlingPolicy.DISABLE_NON_PROXIED_UDP.value;
             || window.IPHandlingPolicy.DEFAULT_PUBLIC_AND_PRIVATE_INTERFACES.equals(policy);
     }
 
-    if (browserSupportsIPHandlingPolicy()) {
-        chrome.privacy.network.webRTCIPHandlingPolicy.get({}, function(details) {
-            if (isPolicyThatExposesIp(details.value)) {
-                console.info("setting ip webRTCIPHandlingPolicy to " + window.IPHandlingPolicy.DISABLE_NON_PROXIED_UDP.name);
-                chrome.privacy.network.webRTCIPHandlingPolicy.set({
-                    value: policy
-                });
-            } else {
-                console.info("user already has webRTCIPHandlingPolicy set to something private");
-            }
-        });
-    } else {
-        throw 'browser must support IPHandlingPolicy';
-    }
+    chrome.privacy.network.webRTCIPHandlingPolicy.get({}, function(details) {
+        if (isPolicyThatExposesIp(details.value)) {
+            console.info("setting ip webRTCIPHandlingPolicy to " + window.IPHandlingPolicy.DISABLE_NON_PROXIED_UDP.name);
+            chrome.privacy.network.webRTCIPHandlingPolicy.set({
+                value: policy
+            });
+        } else {
+            console.info("user already has webRTCIPHandlingPolicy set to something private");
+        }
+    });
 })(GOOD_POLICY);
 
