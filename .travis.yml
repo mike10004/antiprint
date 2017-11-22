@@ -4,7 +4,8 @@ addons:
     packages:
     - xvfb
     - chromium-browser
+    - firefox
 notifications:
   email: false
-install: true
+install: dpkg-query -l xvfb chromium-browser firefox
 script: mvn -B install -Pcrx-xvfb-run -Dantiprint.chrome.extraArgs=--no-sandbox -Dantiprint.chrome.executablePath=/usr/bin/chromium-browser -Dwdm.gitHubTokenName=$GITHUB_TOKEN_NAME -Dwdm.gitHubTokenSecret=$GITHUB_TOKEN_SECRET
