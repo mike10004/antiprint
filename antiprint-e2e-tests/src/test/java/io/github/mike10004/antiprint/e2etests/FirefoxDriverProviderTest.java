@@ -8,8 +8,6 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.Objects;
 
-import static org.junit.Assert.*;
-
 public class FirefoxDriverProviderTest extends BrowserUsingTestBase<CustomFirefoxDriver, String> {
 
     @BeforeClass
