@@ -12,7 +12,6 @@
     <artifactId>antiprint-e2e-tests</artifactId>
 
     <properties>
-        <junit.jupiter.version>5.0.1</junit.jupiter.version>
         <chrome.extraArgs></chrome.extraArgs>
     </properties>
 
@@ -178,7 +177,7 @@
         <dependency>
             <groupId>com.github.mike10004</groupId>
             <artifactId>xvfb-testing</artifactId>
-            <version>0.11</version>
+            <version>0.14</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -5,11 +5,17 @@ PROG="pack-extension"
 if [ -z "${CHROME_EXECUTABLE}" ] ; then
   CHROME=$(which google-chrome || which chromium-browser)
   if [ -z "${CHROME}" ] ; then
-    echo "${PROG}: chrome is not installed or executable is not on PATH" >&2
-    exit 1
+    if [ -n "${USERPROFILE}" ] ; then 
+      # assume this is Windows
+      CHROME="C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"
+    else
+      echo "${PROG}: chrome is not installed or executable is not on PATH" >&2
+      exit 1
+    fi
   fi
 else
   CHROME="${CHROME_EXECUTABLE}"
+  echo "${PROG}: using ${CHROME_EXECUTABLE} as defined by CHROME_EXECUTABLE environment variable" >&2
 fi
 
 if [ ! -f "${CHROME}" ] ; then
