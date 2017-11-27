@@ -1,6 +1,8 @@
 package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.io.ByteStreams;
+import io.github.mike10004.antiprint.e2etests.CustomFirefoxDriver.AddonInstallation;
+import io.github.mike10004.antiprint.e2etests.CustomFirefoxDriver.AddonInstallation.AddonDuration;
 import io.github.mike10004.crxtool.CrxParser;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -15,7 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-public class FirefoxDriverProvider implements WebDriverProvider<FirefoxDriver> {
+public class FirefoxDriverProvider implements WebDriverProvider<CustomFirefoxDriver> {
 
     private final String userAgent;
 
@@ -28,10 +30,9 @@ public class FirefoxDriverProvider implements WebDriverProvider<FirefoxDriver> {
     }
 
     @Override
-    public FirefoxDriver provide(Map<String, String> environment) throws IOException {
+    public CustomFirefoxDriver provide(Map<String, String> environment) throws IOException {
         FirefoxProfile profile = new FirefoxProfile();
         File extensionZipFile = prepareZipFile();
-        profile.addExtension(extensionZipFile);
         FirefoxOptions options = new FirefoxOptions();
         if (userAgent != null) {
             options.addPreference("general.useragent.override", userAgent);
@@ -41,7 +42,8 @@ public class FirefoxDriverProvider implements WebDriverProvider<FirefoxDriver> {
                 .usingAnyFreePort()
                 .withEnvironment(environment)
                 .build();
-        FirefoxDriver driver = new FirefoxDriver(service, options);
+        CustomFirefoxDriver driver = new CustomFirefoxDriver(service, options);
+        driver.installAddon(new AddonInstallation(extensionZipFile, AddonDuration.TEMPORARY));
         return driver;
     }
 

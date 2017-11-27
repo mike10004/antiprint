@@ -2,38 +2,29 @@ package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
-import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.ReadableUserAgent;
+import net.sf.uadetector.UserAgentFamily;
 import net.sf.uadetector.UserAgentStringParser;
 import net.sf.uadetector.service.UADetectorServiceFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import javax.annotation.Nullable;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FilterInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -41,11 +32,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -102,6 +89,14 @@ public class Tests {
                 throw new RuntimeException(e);
             }
         };
+    }
+
+    public static Map<String, Object> getNavigatorTestCase(UserAgentFamily userAgentFamily, OperatingSystemFamily operatingSystemFamily) {
+        return getNavigatorTestCasesByUserAgent(userAgent -> {
+            return userAgentFamily == userAgent.getFamily() && operatingSystemFamily == userAgent.getOperatingSystem().getFamily();
+        }).stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("no test cases for given requirements"));
     }
 
     public static ImmutableList<Map<String, Object>> getNavigatorTestCasesByUserAgent(Predicate<? super ReadableUserAgent> filter) {
