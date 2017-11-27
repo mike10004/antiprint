@@ -1,5 +1,6 @@
 package io.github.mike10004.antiprint.e2etests;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
 import io.github.mike10004.crxtool.CrxParser;
@@ -9,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public interface CrxProvider {
 
@@ -57,12 +59,18 @@ public interface CrxProvider {
         File extensionSourcesDir = new File(Tests.getProperties().getProperty("project.parent.basedir"), "antiprint-extension");
         Unzippage expected = Tests.pseudoUnzippage(extensionSourcesDir.toPath());
         if (!Tests.filesEqual(expected, crxUnzipped)) {
+            List<String> allEntries = ImmutableList.<String>builder()
+                    .addAll(crxUnzipped.directoryEntries())
+                    .addAll(crxUnzipped.fileEntries())
+                    .build();
+            System.err.format("%d file/directory entries in crx:%n", allEntries.size());
+            allEntries.stream().sorted().forEach(System.err::println);
             for (String entry : expected.fileEntries()) {
-                if (ImmutableSet.copyOf(crxUnzipped.fileEntries()).contains(entry)) {
+                ByteSource actual = crxUnzipped.getFileBytes(entry);
+                if (actual == null) {
                     System.err.format("crx does not have file: %s%n", entry);
                 }
-                ByteSource actual = crxUnzipped.getFileBytes(entry);
-                if (!expected.getFileBytes(entry).contentEquals(actual)) {
+                if (actual != null && !expected.getFileBytes(entry).contentEquals(actual)) {
                     System.err.format("needs to be updated: %s%n", entry);
                 }
             }

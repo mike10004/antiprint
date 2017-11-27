@@ -18,6 +18,7 @@ import net.sf.uadetector.ReadableUserAgent;
 import net.sf.uadetector.UserAgentStringParser;
 import net.sf.uadetector.service.UADetectorServiceFactory;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
@@ -153,7 +154,7 @@ public class Tests {
 
     public static Unzippage pseudoUnzippage(Path parent) throws IOException {
         Collection<File> files = FileUtils.listFiles(parent.toFile(), null, true);
-        Function<File, String> entryNameMapper = file -> parent.relativize(file.toPath()).toString();
+        Function<File, String> entryNameMapper = file -> FilenameUtils.normalizeNoEndSeparator(parent.relativize(file.toPath()).toString(), true) + (file.isDirectory() ? "/" : "");
         Set<String> directoryEntries = files.stream().map(File::getParentFile)
                 .map(entryNameMapper)
                 .collect(Collectors.toSet());
