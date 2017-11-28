@@ -17,9 +17,17 @@ class ExtendedCommandExecutor extends DriverCommandExecutor {
     public static Map<String, CommandInfo> buildAdditionalCommands() {
         Map<String, CommandInfo> map = new HashMap<>();
         CommandInfo installAddon = new CommandInfo("/session/:sessionId/moz/addon/install", HttpMethod.POST);
-        map.put(ExtendedCommands.INSTALL_ADDON, installAddon);
+        map.put(Commands.INSTALL_ADDON, installAddon);
         CommandInfo uninstallAddon = new CommandInfo("/session/:sessionId/moz/addon/uninstall", HttpMethod.POST);
-        map.put(ExtendedCommands.UNINSTALL_ADDON, uninstallAddon);
+        map.put(Commands.UNINSTALL_ADDON, uninstallAddon);
         return map;
+    }
+
+    static final class Commands {
+
+        public static final String INSTALL_ADDON = "installAddon";
+        public static final String UNINSTALL_ADDON = "uninstallAddon";
+
+        private Commands() {}
     }
 }

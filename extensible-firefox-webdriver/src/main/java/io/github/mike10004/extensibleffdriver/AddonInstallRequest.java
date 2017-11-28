@@ -3,12 +3,12 @@ package io.github.mike10004.extensibleffdriver;
 import java.io.File;
 import java.util.Objects;
 
-public class AddonInstallation {
+public class AddonInstallRequest {
 
     public final File zipPathname;
     public final AddonPersistence duration;
 
-    public AddonInstallation(File zipPathname, AddonPersistence duration) {
+    public AddonInstallRequest(File zipPathname, AddonPersistence duration) {
         this.zipPathname = Objects.requireNonNull(zipPathname, "zip pathname");
         this.duration = Objects.requireNonNull(duration, "duration");
     }
@@ -18,7 +18,7 @@ public class AddonInstallation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AddonInstallation that = (AddonInstallation) o;
+        AddonInstallRequest that = (AddonInstallRequest) o;
 
         if (zipPathname != null ? !zipPathname.equals(that.zipPathname) : that.zipPathname != null) return false;
         if (duration != that.duration) return false;

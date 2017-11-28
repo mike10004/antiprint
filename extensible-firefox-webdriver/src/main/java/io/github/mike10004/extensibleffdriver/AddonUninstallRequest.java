@@ -3,14 +3,14 @@ package io.github.mike10004.extensibleffdriver;
 /**
  * Class that represents the parameters for an addon installation.
  */
-public class AddonUninstallation {
+public class AddonUninstallRequest {
 
     /**
      * The addon id.
      */
     public final String id;
 
-    public AddonUninstallation(String id) {
+    public AddonUninstallRequest(String id) {
         this.id = id;
     }
 
@@ -19,7 +19,7 @@ public class AddonUninstallation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AddonUninstallation that = (AddonUninstallation) o;
+        AddonUninstallRequest that = (AddonUninstallRequest) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
 

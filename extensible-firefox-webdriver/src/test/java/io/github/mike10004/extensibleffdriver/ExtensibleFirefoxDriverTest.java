@@ -46,7 +46,7 @@ public class ExtensibleFirefoxDriverTest {
     @org.junit.Test
     public void installAddon_unsigned_temporary() throws Exception {
         File sampleExtensionZipFile = buildSampleExtension();
-        AddonInstallation installRequest = new AddonInstallation(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
+        AddonInstallRequest installRequest = new AddonInstallRequest(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
         BehaviorVerifier<Void> verifier = (driver, baseUri) -> {
             driver.get(baseUri.toString());
             WebElement element = new WebDriverWait(driver, 3).until(ExpectedConditions.presenceOfElementLocated(By.id("injected")));
@@ -63,7 +63,7 @@ public class ExtensibleFirefoxDriverTest {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    private <T> T testInstallAddon(AddonInstallation installRequest, BehaviorVerifier<T> verifier) throws Exception {
+    private <T> T testInstallAddon(AddonInstallRequest installRequest, BehaviorVerifier<T> verifier) throws Exception {
         GeckoDriverService gecko = new GeckoDriverService.Builder()
                 .usingAnyFreePort()
                 .withEnvironment(xvfb.getController().newEnvironment())
@@ -96,9 +96,9 @@ public class ExtensibleFirefoxDriverTest {
     @org.junit.Test
     public void uninstallAddon() throws Exception {
         File sampleExtensionZipFile = buildSampleExtension();
-        AddonInstallation installRequest = new AddonInstallation(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
+        AddonInstallRequest installRequest = new AddonInstallRequest(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
         BehaviorVerifier<Void> verifier = (driver, baseUri) -> {
-            AddonUninstallation uninstallRequest = new AddonUninstallation(SAMPLE_EXTENSION_ID);
+            AddonUninstallRequest uninstallRequest = new AddonUninstallRequest(SAMPLE_EXTENSION_ID);
             driver.uninstallAddon(uninstallRequest);
             driver.get(baseUri.toString());
             try {

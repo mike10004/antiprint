@@ -2,7 +2,7 @@ package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.io.ByteStreams;
 import io.github.mike10004.crxtool.CrxParser;
-import io.github.mike10004.extensibleffdriver.AddonInstallation;
+import io.github.mike10004.extensibleffdriver.AddonInstallRequest;
 import io.github.mike10004.extensibleffdriver.AddonPersistence;
 import io.github.mike10004.extensibleffdriver.ExtensibleFirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -43,7 +43,7 @@ public class FirefoxDriverProvider implements WebDriverProvider<ExtensibleFirefo
                 .withEnvironment(environment)
                 .build();
         ExtensibleFirefoxDriver driver = new ExtensibleFirefoxDriver(service, options);
-        driver.installAddon(new AddonInstallation(extensionZipFile, AddonPersistence.TEMPORARY));
+        driver.installAddon(new AddonInstallRequest(extensionZipFile, AddonPersistence.TEMPORARY));
         return driver;
     }
 

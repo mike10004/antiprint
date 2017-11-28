@@ -19,6 +19,7 @@ package io.github.mike10004.extensibleffdriver;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import io.github.mike10004.extensibleffdriver.ExtendedCommandExecutor.Commands;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ImmutableCapabilities;
 import org.openqa.selenium.MutableCapabilities;
@@ -131,11 +132,11 @@ public class ExtensibleFirefoxDriver extends RemoteWebDriver {
      * @param request installation request parameters
      * @throws IOException
      */
-    public void installAddon(AddonInstallation request) throws IOException {
+    public void installAddon(AddonInstallRequest request) throws IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("path", request.zipPathname.getAbsolutePath());
         params.put("temporary", request.duration == AddonPersistence.TEMPORARY);
-        Command command = new Command(getSessionId(), ExtendedCommands.INSTALL_ADDON, params);
+        Command command = new Command(getSessionId(), Commands.INSTALL_ADDON, params);
         Response response = getCommandExecutor().execute(command);
         if (!isSuccess(response)) {
             throw new NonSuccessResponseException(response);
@@ -147,10 +148,10 @@ public class ExtensibleFirefoxDriver extends RemoteWebDriver {
      * @param request uninstallation request parameters
      * @throws IOException
      */
-    public void uninstallAddon(AddonUninstallation request) throws IOException {
+    public void uninstallAddon(AddonUninstallRequest request) throws IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("id", request.id);
-        Command command = new Command(getSessionId(), ExtendedCommands.UNINSTALL_ADDON, params);
+        Command command = new Command(getSessionId(), Commands.UNINSTALL_ADDON, params);
         Response response = getCommandExecutor().execute(command);
         if (!isSuccess(response)) {
             throw new NonSuccessResponseException(response);
