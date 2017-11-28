@@ -8,7 +8,7 @@
         <version>0.4</version>
     </parent>
     <artifactId>extensible-firefox-webdriver</artifactId>
-    <version>3.7.1x1-SNAPSHOT</version>
+    <version>3.7.1x1</version>
     <build>
         <pluginManagement>
             <plugins>
