@@ -18,7 +18,7 @@ public class ExtensibleFirefoxDriver extends FirefoxDriver {
 
     public ExtensibleFirefoxDriver(GeckoDriverService service, FirefoxOptions options) {
         super(service, options);
-        this.addonSupportingDriver = new AddonSupportingDriver(ParentDriver.fromRemoteDriver(this), service, options);
+        this.addonSupportingDriver = new AddonSupportingDriver(this::getSessionId, service);
     }
 
     /**
