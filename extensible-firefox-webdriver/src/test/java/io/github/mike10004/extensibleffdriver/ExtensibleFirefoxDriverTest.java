@@ -26,17 +26,17 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ExtensibleFirefoxDriverTest {
 
     @Rule
-    public XvfbRule xvfb = XvfbRule.builder().disabled().build();
+    public XvfbRule xvfb = XvfbRule.builder().build();
 
     @BeforeClass
     public static void setUpGeckodriver() {
@@ -47,21 +47,23 @@ public class ExtensibleFirefoxDriverTest {
     public void installAddon_unsigned_temporary() throws Exception {
         File sampleExtensionZipFile = buildSampleExtension();
         AddonInstallation installRequest = new AddonInstallation(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
-        BehaviorVerifier verifier = (driver, baseUri) -> {
+        BehaviorVerifier<Void> verifier = (driver, baseUri) -> {
             driver.get(baseUri.toString());
             WebElement element = new WebDriverWait(driver, 3).until(ExpectedConditions.presenceOfElementLocated(By.id("injected")));
             String text = element.getText();
             assertEquals("element text", "Hello", text.trim());
+            return (Void) null;
         };
         testInstallAddon(installRequest, verifier);
     }
 
-    private interface BehaviorVerifier {
-        void verify(ExtensibleFirefoxDriver driver, URI baseUri);
+    private interface BehaviorVerifier<T> {
+        @SuppressWarnings("UnusedReturnValue")
+        T verify(ExtensibleFirefoxDriver driver, URI baseUri) throws IOException;
     }
 
-    private void testInstallAddon(AddonInstallation installRequest, BehaviorVerifier verifier) throws Exception {
-
+    @SuppressWarnings("UnusedReturnValue")
+    private <T> T testInstallAddon(AddonInstallation installRequest, BehaviorVerifier<T> verifier) throws Exception {
         GeckoDriverService gecko = new GeckoDriverService.Builder()
                 .usingAnyFreePort()
                 .withEnvironment(xvfb.getController().newEnvironment())
@@ -74,12 +76,14 @@ public class ExtensibleFirefoxDriverTest {
             ExtensibleFirefoxDriver driver = new ExtensibleFirefoxDriver(gecko, new FirefoxOptions());
             try {
                 driver.installAddon(installRequest);
-                verifier.verify(driver, control.baseUri());
+                return verifier.verify(driver, control.baseUri());
             } finally {
                 driver.quit();
             }
         }
     }
+
+    private static final String SAMPLE_EXTENSION_ID = "sample-extension@antiprint.mike10004.github.io";
 
     private File buildSampleExtension() throws URISyntaxException, IOException {
         File manifestFile = new File(getClass().getResource("/sample-extension/manifest.json").toURI());
@@ -89,10 +93,23 @@ public class ExtensibleFirefoxDriverTest {
         return zipFile;
     }
 
-    @org.junit.Ignore
     @org.junit.Test
     public void uninstallAddon() throws Exception {
-        fail("not yet implemented");
+        File sampleExtensionZipFile = buildSampleExtension();
+        AddonInstallation installRequest = new AddonInstallation(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
+        BehaviorVerifier<Void> verifier = (driver, baseUri) -> {
+            AddonUninstallation uninstallRequest = new AddonUninstallation(SAMPLE_EXTENSION_ID);
+            driver.uninstallAddon(uninstallRequest);
+            driver.get(baseUri.toString());
+            try {
+                new WebDriverWait(driver, 3).until(ExpectedConditions.presenceOfElementLocated(By.id("injected")));
+                fail("extension still installed it seems");
+            } catch (org.openqa.selenium.TimeoutException ignore) {
+                // we expect NOT to find the element
+            }
+            return (Void) null;
+        };
+        testInstallAddon(installRequest, verifier);
     }
 
     private void zip(Path enclosure, File zipFile) throws IOException {
