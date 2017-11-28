@@ -1,5 +1,6 @@
 package io.github.mike10004.extensibleffdriver;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import org.openqa.selenium.UnsupportedCommandException;
 import org.openqa.selenium.remote.Command;
@@ -13,12 +14,11 @@ import org.openqa.selenium.remote.http.HttpRequest;
 import org.openqa.selenium.remote.http.HttpResponse;
 import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
 import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
-import org.openqa.selenium.remote.internal.ApacheHttpClient;
 import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Command executor that only handles addon install/uninstall commands and
@@ -26,21 +26,19 @@ import java.util.Objects;
  */
 class LimitedCommandExecutor {
 
-    private final HttpClient client;
+    private final Supplier<HttpClient> clientProvider;
     private CommandCodec<HttpRequest> commandCodec;
     private ResponseCodec<HttpResponse> responseCodec;
 
-    public LimitedCommandExecutor(DriverService service) {
-        this(service, new ApacheHttpClient.Factory());
-    }
-
-    public LimitedCommandExecutor(DriverService service,
-                                  HttpClient.Factory httpClientFactory) {
-        URL url = service.getUrl();
-        client = httpClientFactory.createClient(url);
+    public LimitedCommandExecutor(Supplier<? extends HttpClient> clientProvider) {
+        this.clientProvider = Suppliers.memoize(clientProvider::get);
         commandCodec = new W3CHttpCommandCodec();
         responseCodec = new W3CHttpResponseCodec();
-        Commands.getList().forEach(this::defineCommand);
+        Commands.getList().forEach(spec -> commandCodec.defineCommand(spec.name, spec.method, spec.url));
+    }
+
+    public static LimitedCommandExecutor forService(DriverService service, HttpClient.Factory httpClientFactory) {
+        return new LimitedCommandExecutor(() -> httpClientFactory.createClient(service.getUrl()));
     }
 
     private static class CommandSpec {
@@ -53,10 +51,6 @@ class LimitedCommandExecutor {
             this.method = Objects.requireNonNull(method);
             this.url = Objects.requireNonNull(url);
         }
-    }
-
-    private void defineCommand(CommandSpec spec) {
-        commandCodec.defineCommand(spec.name, spec.method, spec.url);
     }
 
     static final class Commands {
@@ -113,7 +107,7 @@ class LimitedCommandExecutor {
         Commands.checkSupportedCommand(command.getName());
         HttpRequest httpRequest = commandCodec.encode(command);
         try {
-            HttpResponse httpResponse = client.execute(httpRequest, true);
+            HttpResponse httpResponse = clientProvider.get().execute(httpRequest, true);
             Response response = responseCodec.decode(httpResponse);
             if (response.getSessionId() == null) {
                 if (httpResponse.getTargetHost() != null) {

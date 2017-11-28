@@ -17,6 +17,15 @@ public class ExtensibleFirefoxDriver extends FirefoxDriver {
 
     private final AddonSupport addonSupport;
 
+    /**
+     * Constructs a driver instance using the given driver service and capabilities.
+     * This constructor invokes the superconstructor
+     * {@link FirefoxDriver#FirefoxDriver(GeckoDriverService, FirefoxOptions)} directly.
+     * The instance will act just like a {@link FirefoxDriver} instance, except you
+     * will be able to
+     * @param service the driver service
+     * @param options the capabilities
+     */
     public ExtensibleFirefoxDriver(GeckoDriverService service, FirefoxOptions options) {
         super(service, options);
         this.addonSupport = new AddonSupport(this::getSessionId, service);

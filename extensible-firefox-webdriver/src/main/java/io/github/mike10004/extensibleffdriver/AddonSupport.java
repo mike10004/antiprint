@@ -5,6 +5,7 @@ import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.remote.internal.ApacheHttpClient;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ class AddonSupport {
 
     public AddonSupport(Supplier<? extends SessionId> parentDriver, GeckoDriverService driverService) {
         this.parentDriver = Objects.requireNonNull(parentDriver);
-        commandExecutor = new LimitedCommandExecutor(driverService);
+        commandExecutor = LimitedCommandExecutor.forService(driverService, new ApacheHttpClient.Factory());
     }
 
     /**
