@@ -1,5 +1,6 @@
 package io.github.mike10004.extensibleffdriver;
 
+import com.google.common.collect.ImmutableList;
 import org.openqa.selenium.UnsupportedCommandException;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.CommandCodec;
@@ -10,8 +11,6 @@ import org.openqa.selenium.remote.http.HttpClient;
 import org.openqa.selenium.remote.http.HttpMethod;
 import org.openqa.selenium.remote.http.HttpRequest;
 import org.openqa.selenium.remote.http.HttpResponse;
-import org.openqa.selenium.remote.http.JsonHttpCommandCodec;
-import org.openqa.selenium.remote.http.JsonHttpResponseCodec;
 import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
 import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
 import org.openqa.selenium.remote.internal.ApacheHttpClient;
@@ -19,29 +18,32 @@ import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Objects;
 
-class ExtendedCommandExecutor  {
+/**
+ * Command executor that only handles addon install/uninstall commands and
+ * requires the W3C dialect to be used.
+ */
+class LimitedCommandExecutor {
 
     private final HttpClient client;
     private CommandCodec<HttpRequest> commandCodec;
     private ResponseCodec<HttpResponse> responseCodec;
 
-    public ExtendedCommandExecutor(DriverService service) {
+    public LimitedCommandExecutor(DriverService service) {
         this(service, new ApacheHttpClient.Factory());
     }
 
-    public ExtendedCommandExecutor(DriverService service,
-                                   HttpClient.Factory httpClientFactory) {
+    public LimitedCommandExecutor(DriverService service,
+                                  HttpClient.Factory httpClientFactory) {
         URL url = service.getUrl();
         client = httpClientFactory.createClient(url);
         commandCodec = new W3CHttpCommandCodec();
         responseCodec = new W3CHttpResponseCodec();
-        buildAdditionalCommands().forEach(this::defineCommand);
+        Commands.getList().forEach(this::defineCommand);
     }
 
-    static class CommandSpec {
+    private static class CommandSpec {
         public final String name;
         public final HttpMethod method;
         public final String url;
@@ -53,40 +55,32 @@ class ExtendedCommandExecutor  {
         }
     }
 
-    /**
-     * It may be useful to extend the commands understood by this {@code HttpCommandExecutor} at run
-     * time, and this can be achieved via this method. Note, this is protected, and expected usage is
-     * for subclasses only to call this.
-     *
-     * @param commandName The name of the command to use.
-     * @param info CommandInfo for the command name provided
-     */
-    protected void defineCommand(CommandSpec spec) {
+    private void defineCommand(CommandSpec spec) {
         commandCodec.defineCommand(spec.name, spec.method, spec.url);
-    }
-
-    public static Iterable<CommandSpec> buildAdditionalCommands() {
-        return Arrays.asList(
-                new CommandSpec(Commands.INSTALL_ADDON, HttpMethod.POST, "/session/:sessionId/moz/addon/install"),
-                new CommandSpec(Commands.UNINSTALL_ADDON, HttpMethod.POST, "/session/:sessionId/moz/addon/uninstall")
-        );
     }
 
     static final class Commands {
 
-        public static final String INSTALL_ADDON = "installAddon";
-        public static final String UNINSTALL_ADDON = "uninstallAddon";
+        private static final String URL_INSTALL_ADDON = "/session/:sessionId/moz/addon/install";
+        private static final String URL_UNINSTALL_ADDON = "/session/:sessionId/moz/addon/uninstall";
+        public static final String NAME_INSTALL_ADDON = "installAddon";
+        public static final String NAME_UNINSTALL_ADDON = "uninstallAddon";
+        private static final CommandSpec INSTALL_ADDON = new CommandSpec(Commands.NAME_INSTALL_ADDON, HttpMethod.POST, Commands.URL_INSTALL_ADDON);
+        private static final CommandSpec UNINSTALL_ADDON = new CommandSpec(Commands.NAME_UNINSTALL_ADDON, HttpMethod.POST, Commands.URL_UNINSTALL_ADDON);
+        private static final ImmutableList<CommandSpec> commands = ImmutableList.of(INSTALL_ADDON, UNINSTALL_ADDON);
+        private static final ImmutableList<String> commandNames = commands.stream().map(cmd -> cmd.name).collect(ImmutableList.toImmutableList());
 
         private Commands() {}
 
         public static void checkSupportedCommand(String command) {
             Objects.requireNonNull(command, "command");
-            switch (command) {
-                case INSTALL_ADDON:
-                case UNINSTALL_ADDON:
-                    return;
+            if (!commandNames.contains(command)) {
+                throw new IllegalUsageException("unsupported command");
             }
-            throw new IllegalUsageException("unsupported command");
+        }
+
+        public static Iterable<CommandSpec> getList() {
+            return commands;
         }
     }
 

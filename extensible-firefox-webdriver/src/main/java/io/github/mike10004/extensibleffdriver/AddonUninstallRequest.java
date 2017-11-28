@@ -1,7 +1,7 @@
 package io.github.mike10004.extensibleffdriver;
 
 /**
- * Class that represents the parameters for an addon installation.
+ * Class that represents the parameters for uninstallation of an addon.
  */
 public class AddonUninstallRequest {
 
@@ -10,6 +10,10 @@ public class AddonUninstallRequest {
      */
     public final String id;
 
+    /**
+     * Constructs a new request instance.
+     * @param id the addon id; probably the value of the manifest {@code applications.gecko.id} field
+     */
     public AddonUninstallRequest(String id) {
         this.id = id;
     }

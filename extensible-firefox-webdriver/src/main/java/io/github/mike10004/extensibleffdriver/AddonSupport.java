@@ -1,6 +1,6 @@
 package io.github.mike10004.extensibleffdriver;
 
-import io.github.mike10004.extensibleffdriver.ExtendedCommandExecutor.Commands;
+import io.github.mike10004.extensibleffdriver.LimitedCommandExecutor.Commands;
 import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.Response;
@@ -12,14 +12,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-class AddonSupportingDriver {
+class AddonSupport {
 
     private final Supplier<? extends SessionId> parentDriver;
-    private final ExtendedCommandExecutor commandExecutor;
+    private final LimitedCommandExecutor commandExecutor;
 
-    public AddonSupportingDriver(Supplier<? extends SessionId> parentDriver, GeckoDriverService driverService) {
+    public AddonSupport(Supplier<? extends SessionId> parentDriver, GeckoDriverService driverService) {
         this.parentDriver = Objects.requireNonNull(parentDriver);
-        commandExecutor = new ExtendedCommandExecutor(driverService);
+        commandExecutor = new LimitedCommandExecutor(driverService);
     }
 
     /**
@@ -30,8 +30,8 @@ class AddonSupportingDriver {
     public void installAddon(AddonInstallRequest request) throws IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("path", request.zipPathname.getAbsolutePath());
-        params.put("temporary", request.duration == AddonPersistence.TEMPORARY);
-        Command command = new Command(parentDriver.get(), Commands.INSTALL_ADDON, params);
+        params.put("temporary", request.persistence == AddonPersistence.TEMPORARY);
+        Command command = new Command(parentDriver.get(), Commands.NAME_INSTALL_ADDON, params);
         Response response = commandExecutor.execute(command);
         if (!isSuccess(response)) {
             throw new NonSuccessResponseException(response);
@@ -46,7 +46,7 @@ class AddonSupportingDriver {
     public void uninstallAddon(AddonUninstallRequest request) throws IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("id", request.id);
-        Command command = new Command(parentDriver.get(), Commands.UNINSTALL_ADDON, params);
+        Command command = new Command(parentDriver.get(), Commands.NAME_UNINSTALL_ADDON, params);
         Response response = commandExecutor.execute(command);
         if (!isSuccess(response)) {
             throw new NonSuccessResponseException(response);
