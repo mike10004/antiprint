@@ -43,7 +43,7 @@ public class FirefoxDriverProvider implements WebDriverProvider<ExtensibleFirefo
                 .withEnvironment(environment)
                 .build();
         ExtensibleFirefoxDriver driver = new ExtensibleFirefoxDriver(service, options);
-        driver.installAddon(new AddonInstallRequest(extensionZipFile, AddonPersistence.TEMPORARY));
+        driver.installAddon(AddonInstallRequest.fromFile(extensionZipFile, AddonPersistence.TEMPORARY));
         return driver;
     }
 
