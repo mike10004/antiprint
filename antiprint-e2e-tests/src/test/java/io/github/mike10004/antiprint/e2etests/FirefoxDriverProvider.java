@@ -1,10 +1,10 @@
 package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.io.ByteStreams;
-import io.github.mike10004.antiprint.e2etests.CustomFirefoxDriver.AddonInstallation;
-import io.github.mike10004.antiprint.e2etests.CustomFirefoxDriver.AddonInstallation.AddonDuration;
 import io.github.mike10004.crxtool.CrxParser;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import io.github.mike10004.extensibleffdriver.AddonInstallation;
+import io.github.mike10004.extensibleffdriver.AddonPersistence;
+import io.github.mike10004.extensibleffdriver.ExtensibleFirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.GeckoDriverService;
@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-public class FirefoxDriverProvider implements WebDriverProvider<CustomFirefoxDriver> {
+public class FirefoxDriverProvider implements WebDriverProvider<ExtensibleFirefoxDriver> {
 
     private final String userAgent;
 
@@ -30,7 +30,7 @@ public class FirefoxDriverProvider implements WebDriverProvider<CustomFirefoxDri
     }
 
     @Override
-    public CustomFirefoxDriver provide(Map<String, String> environment) throws IOException {
+    public ExtensibleFirefoxDriver provide(Map<String, String> environment) throws IOException {
         FirefoxProfile profile = new FirefoxProfile();
         File extensionZipFile = prepareZipFile();
         FirefoxOptions options = new FirefoxOptions();
@@ -42,8 +42,8 @@ public class FirefoxDriverProvider implements WebDriverProvider<CustomFirefoxDri
                 .usingAnyFreePort()
                 .withEnvironment(environment)
                 .build();
-        CustomFirefoxDriver driver = new CustomFirefoxDriver(service, options);
-        driver.installAddon(new AddonInstallation(extensionZipFile, AddonDuration.TEMPORARY));
+        ExtensibleFirefoxDriver driver = new ExtensibleFirefoxDriver(service, options);
+        driver.installAddon(new AddonInstallation(extensionZipFile, AddonPersistence.TEMPORARY));
         return driver;
     }
 

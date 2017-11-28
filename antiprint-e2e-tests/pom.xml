@@ -192,5 +192,11 @@
             <version>0.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.mike10004</groupId>
+            <artifactId>extensible-firefox-webdriver</artifactId>
+            <version>3.7.1x1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

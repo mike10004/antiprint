@@ -8,8 +8,6 @@ import io.github.mike10004.nanochamp.server.NanoResponse;
 import io.github.mike10004.nanochamp.server.NanoServer;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
-import org.junit.Rule;
-import org.junit.rules.Timeout;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -39,7 +37,7 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
         try {
             // the extension is only active if the page URL is http[s]
             try (NanoControl control = server.startServer()) {
-                driver.get(control.buildUri().build().toString());
+                driver.get(control.baseUri().toString());
                 /*
                  * Content is written with document.write, so we don't have to
                  * use a WebDriverWait to poll the page

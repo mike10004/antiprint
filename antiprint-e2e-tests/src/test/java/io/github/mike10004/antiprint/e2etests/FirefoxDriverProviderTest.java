@@ -1,5 +1,6 @@
 package io.github.mike10004.antiprint.e2etests;
 
+import io.github.mike10004.extensibleffdriver.ExtensibleFirefoxDriver;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
 import org.junit.BeforeClass;
@@ -8,7 +9,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.Objects;
 
-public class FirefoxDriverProviderTest extends BrowserUsingTestBase<CustomFirefoxDriver, String> {
+public class FirefoxDriverProviderTest extends BrowserUsingTestBase<ExtensibleFirefoxDriver, String> {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -28,7 +29,7 @@ public class FirefoxDriverProviderTest extends BrowserUsingTestBase<CustomFirefo
     }
 
     @Override
-    protected WebDriverProvider<? extends CustomFirefoxDriver> getWebDriverProvider(String userAgent) {
+    protected WebDriverProvider<? extends ExtensibleFirefoxDriver> getWebDriverProvider(String userAgent) {
         return new FirefoxDriverProvider(userAgent);
     }
 }

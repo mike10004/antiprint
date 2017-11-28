@@ -60,7 +60,7 @@ public abstract class WebrtcIpLeakageTestBase extends BrowserUsingTestBase<WebDr
 
             @Override
             public void visitPage(NanoControl control, WebDriver driver) throws MalformedURLException, URISyntaxException {
-                driver.get(control.buildUri().build().toURL().toString());
+                driver.get(control.baseUri().toString());
             }
         });
     }

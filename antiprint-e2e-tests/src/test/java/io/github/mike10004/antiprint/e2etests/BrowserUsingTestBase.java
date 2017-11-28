@@ -15,7 +15,6 @@ public abstract class BrowserUsingTestBase<W extends WebDriver, P> {
 
     @Rule
     public final XvfbRule xvfb = XvfbRule.builder()
-            .disabledOnWindows()
             .disabled(SHOW_BROWSER_WINDOW || PAUSE_BEFORE_CLOSE)
             .build();
 
