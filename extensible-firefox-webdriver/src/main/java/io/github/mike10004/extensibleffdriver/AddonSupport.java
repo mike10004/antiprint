@@ -30,8 +30,7 @@ class AddonSupport {
      */
     public void installAddon(AddonInstallRequest request) throws IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("path", request.zipPathname.getAbsolutePath());
-        params.put("temporary", request.persistence == AddonPersistence.TEMPORARY);
+        request.toParameters(params);
         Command command = new Command(parentDriver.get(), Commands.NAME_INSTALL_ADDON, params);
         Response response = commandExecutor.execute(command);
         if (!isSuccess(response)) {
@@ -46,7 +45,7 @@ class AddonSupport {
      */
     public void uninstallAddon(AddonUninstallRequest request) throws IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("id", request.id);
+        request.toParameters(params);
         Command command = new Command(parentDriver.get(), Commands.NAME_UNINSTALL_ADDON, params);
         Response response = commandExecutor.execute(command);
         if (!isSuccess(response)) {

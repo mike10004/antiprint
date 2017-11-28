@@ -1,59 +1,50 @@
 package io.github.mike10004.extensibleffdriver;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Objects;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Class that represents the parameters for a request to install an addon.
  */
-public class AddonInstallRequest {
+public interface AddonInstallRequest {
 
     /**
-     * Pathname of the zip file containing the addon.
+     * Populates a request parameters map as required for this installation request.
+     * @param parameters the parameters map
      */
-    public final File zipPathname;
-
-    /**
-     * Duration the addon will persist. Temporary means for the current session only
-     * and permanent means it will survive through a browser close/open cycle.
-     */
-    public final AddonPersistence persistence;
+    void toParameters(Map<String, Object> parameters);
 
     /**
      * Constructs a request instance.
      * @param zipPathname pathname of the addon zip
      * @param persistence session persistence of the addon
      */
-    public AddonInstallRequest(File zipPathname, AddonPersistence persistence) {
-        this.zipPathname = Objects.requireNonNull(zipPathname, "zip pathname");
-        this.persistence = Objects.requireNonNull(persistence, "duration");
+    static AddonInstallRequest fromFile(File zipPathname, AddonPersistence persistence) {
+        Objects.requireNonNull(zipPathname, "zip pathname");
+        Objects.requireNonNull(persistence, "persistence");
+        return new AddonInstallRequest() {
+            @Override
+            public void toParameters(Map<String, Object> params) {
+                params.put("path", zipPathname.getAbsolutePath());
+                params.put("temporary", persistence == AddonPersistence.TEMPORARY);
+            }
+        };
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AddonInstallRequest that = (AddonInstallRequest) o;
-
-        if (zipPathname != null ? !zipPathname.equals(that.zipPathname) : that.zipPathname != null) return false;
-        if (persistence != that.persistence) return false;
-
-        return true;
+    static AddonInstallRequest fromBase64(String zipBytesBase64, AddonPersistence persistence) {
+        Objects.requireNonNull(persistence, "persistence");
+        Objects.requireNonNull(zipBytesBase64, "zip bytes base-64");
+        checkArgument(!zipBytesBase64.isEmpty(), "zip bytes must be nonempty");
+        return new AddonInstallRequest() {
+            @Override
+            public void toParameters(Map<String, Object> parameters) {
+                parameters.put("addon", zipBytesBase64);
+                parameters.put("temporary", persistence == AddonPersistence.TEMPORARY);
+            }
+        };
     }
 
-    @Override
-    public int hashCode() {
-        int result = zipPathname != null ? zipPathname.hashCode() : 0;
-        result = 31 * result + (persistence != null ? persistence.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "AddonInstallation{" +
-                "zipPathname=" + zipPathname +
-                ", duration=" + persistence +
-                '}';
-    }
 }

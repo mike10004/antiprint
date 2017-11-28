@@ -8,6 +8,7 @@ import io.github.mike10004.nanochamp.server.NanoResponse;
 import io.github.mike10004.nanochamp.server.NanoServer;
 import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -20,7 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
@@ -36,10 +39,23 @@ public class ExtensibleFirefoxDriverTest {
         FirefoxDriverManager.getInstance().version("0.19.1").setup();
     }
 
-    @org.junit.Test
-    public void installAddon_unsigned_temporary() throws Exception {
+    @Test
+    public void installAddon_unsigned_temporary_file() throws Exception {
         File sampleExtensionZipFile = buildSampleExtension();
-        AddonInstallRequest installRequest = new AddonInstallRequest(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
+        AddonInstallRequest installRequest = AddonInstallRequest.fromFile(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
+        installAddon_unsigned_temporary(installRequest);
+    }
+
+    @Test
+    public void installAddon_unsigned_temporary_base64() throws Exception {
+        File sampleExtensionZipFile = buildSampleExtension();
+        byte[] extensionBytes = Files.readAllBytes(sampleExtensionZipFile.toPath());
+        String extensionBase64 = Base64.getEncoder().encodeToString(extensionBytes);
+        AddonInstallRequest installRequest = AddonInstallRequest.fromBase64(extensionBase64, AddonPersistence.TEMPORARY);
+        installAddon_unsigned_temporary(installRequest);
+    }
+
+    public void installAddon_unsigned_temporary(AddonInstallRequest installRequest) throws Exception {
         BehaviorVerifier<Void> verifier = (driver, baseUri) -> {
             driver.get(baseUri.toString());
             WebElement element = new WebDriverWait(driver, 3).until(ExpectedConditions.presenceOfElementLocated(By.id("injected")));
@@ -89,12 +105,12 @@ public class ExtensibleFirefoxDriverTest {
         return zipFile;
     }
 
-    @org.junit.Test
+    @Test
     public void uninstallAddon() throws Exception {
         File sampleExtensionZipFile = buildSampleExtension();
-        AddonInstallRequest installRequest = new AddonInstallRequest(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
+        AddonInstallRequest installRequest = AddonInstallRequest.fromFile(sampleExtensionZipFile, AddonPersistence.TEMPORARY);
         BehaviorVerifier<Void> verifier = (driver, baseUri) -> {
-            AddonUninstallRequest uninstallRequest = new AddonUninstallRequest(SAMPLE_EXTENSION_ID);
+            AddonUninstallRequest uninstallRequest = AddonUninstallRequest.fromId(SAMPLE_EXTENSION_ID);
             driver.uninstallAddon(uninstallRequest);
             driver.get(baseUri.toString());
             try {

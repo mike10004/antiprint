@@ -7,6 +7,7 @@
         <groupId>com.github.mike10004</groupId>
         <version>0.4</version>
     </parent>
+    <artifactId>extensible-firefox-webdriver</artifactId>
     <version>3.7.1x1-SNAPSHOT</version>
     <build>
         <pluginManagement>
@@ -32,7 +33,6 @@
         </pluginManagement>
     </build>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>extensible-firefox-webdriver</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
