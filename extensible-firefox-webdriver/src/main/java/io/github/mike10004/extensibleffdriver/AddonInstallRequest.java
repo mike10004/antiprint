@@ -18,9 +18,10 @@ public interface AddonInstallRequest {
     void toParameters(Map<String, Object> parameters);
 
     /**
-     * Constructs a request instance.
+     * Constructs a request instance from the pathname of an addon zip file.
      * @param zipPathname pathname of the addon zip
      * @param persistence session persistence of the addon
+     * @return the request instance
      */
     static AddonInstallRequest fromFile(File zipPathname, AddonPersistence persistence) {
         Objects.requireNonNull(zipPathname, "zip pathname");
@@ -34,6 +35,12 @@ public interface AddonInstallRequest {
         };
     }
 
+    /**
+     * Constructs a request instance from the base-64-encoded bytes of an addon zip file.
+     * @param zipBytesBase64 the zip bytes
+     * @param persistence session persistence of the addon
+     * @return the request instance
+     */
     static AddonInstallRequest fromBase64(String zipBytesBase64, AddonPersistence persistence) {
         Objects.requireNonNull(persistence, "persistence");
         Objects.requireNonNull(zipBytesBase64, "zip bytes base-64");

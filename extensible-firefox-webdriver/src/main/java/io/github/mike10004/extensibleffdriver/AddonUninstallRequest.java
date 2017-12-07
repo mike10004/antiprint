@@ -25,6 +25,10 @@ public class AddonUninstallRequest {
         return new AddonUninstallRequest(id);
     }
 
+    /**
+     * Populates a query parameters map as required for this addon uninstall request.
+     * @param params the query parameters map
+     */
     public void toParameters(Map<String, Object> params) {
         params.put("id", id);
     }
