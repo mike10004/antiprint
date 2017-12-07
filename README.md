@@ -1,3 +1,6 @@
+[![Travis build status](https://img.shields.io/travis/mike10004/selenium-help.svg)](https://travis-ci.org/mike10004/antiprint)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.mike10004/antiprint-extension.svg)](https://repo1.maven.org/maven2/com/github/mike10004/antiprint-extension/)
+
 # antiprint
 
 Antiprint is an extension for Chrome and Firefox that makes your browser appear
@@ -46,8 +49,8 @@ the value of the preference `media.peerconnection.enabled` to false.
 This extension is incompatible with some other extensions that affect a browser's
 fingerprint. Specifically, errors may occur when this extension is enabled alongside
 other extensions that define properties on `window.navigator` without allowing those
-definitions to be overwritten. An example of such an incompatible extension is the 
-excellent [User-Agent Switcher for Chrome][chrome-ua-switcher]. 
+definitions to be overwritten. An example of such an extension that is unfortunately
+incompatible is the excellent [User-Agent Switcher for Chrome][chrome-ua-switcher]. 
 
 ## Acknowledgments
 
