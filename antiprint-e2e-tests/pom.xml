@@ -5,7 +5,7 @@
     <parent>
         <artifactId>antiprint-extension</artifactId>
         <groupId>com.github.mike10004</groupId>
-        <version>0.5</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,6 +13,8 @@
 
     <properties>
         <chrome.extraArgs></chrome.extraArgs>
+        <antiprint-artifact.version>${project.version}</antiprint-artifact.version>
+        <extensible-firefox-driver.version>3.7.1x${project.version}</extensible-firefox-driver.version>
     </properties>
 
     <profiles>
@@ -26,6 +28,8 @@
                             <configuration>
                                 <systemPropertyVariables>
                                     <antiprint.e2e.tests.allowOutdatedCrxFile>true</antiprint.e2e.tests.allowOutdatedCrxFile>
+                                    <antiprint-artifact.version>${antiprint-artifact.version}</antiprint-artifact.version>
+                                    <extensible-firefox-driver.version>${extensible-firefox-driver.version}</extensible-firefox-driver.version>
                                 </systemPropertyVariables>
                             </configuration>
                         </plugin>
@@ -117,7 +121,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>antiprint-artifact</artifactId>
-            <version>${project.version}</version>
+            <version>${antiprint-artifact.version}</version>
             <type>crx</type>
         </dependency>
         <dependency>
@@ -195,7 +199,7 @@
         <dependency>
             <groupId>com.github.mike10004</groupId>
             <artifactId>extensible-firefox-webdriver</artifactId>
-            <version>3.7.1x1-SNAPSHOT</version>
+            <version>${extensible-firefox-driver.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

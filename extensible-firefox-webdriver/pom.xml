@@ -5,10 +5,10 @@
     <parent>
         <artifactId>antiprint-extension</artifactId>
         <groupId>com.github.mike10004</groupId>
-        <version>0.5</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
     <artifactId>extensible-firefox-webdriver</artifactId>
-    <version>3.7.1x1</version>
+    <version>3.7.1x0.6-SNAPSHOT</version>
     <build>
         <pluginManagement>
             <plugins>
@@ -31,6 +31,22 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
     <modelVersion>4.0.0</modelVersion>
     <dependencies>

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mike10004</groupId>
     <artifactId>antiprint-extension</artifactId>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
     <modules>
         <module>antiprint-e2e-tests</module>
         <module>antiprint-artifact</module>

@@ -9,6 +9,8 @@ import io.github.mike10004.nanochamp.server.NanoServer;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -27,8 +29,10 @@ import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+@RunWith(Enclosed.class)
 public class ExtensibleFirefoxDriverTest {
 
     @Rule
@@ -124,4 +128,26 @@ public class ExtensibleFirefoxDriverTest {
         testInstallAddon(installRequest, verifier);
     }
 
+    public static class ArtifactInfoTest {
+
+        @Test
+        public void getArtifactInfo() {
+            System.out.println("getArtifactInfo");
+            ExtensibleFirefoxDriver.ArtifactInfo info = ExtensibleFirefoxDriver.getArtifactInfo();
+            System.out.println(info);
+            ExtensibleFirefoxDriver.ArtifactInfo parentInfo = ExtensibleFirefoxDriver.getParentArtifactInfo();
+            String parentVersion = parentInfo.getVersion();
+            boolean consistent = info.getVersion().matches("^\\d+\\.\\d+\\.\\d+x\\Q" + parentVersion + "\\E$");
+            assertTrue("version suffix equals parent version: " + info.getVersion() + " is not consistent with " + parentVersion, consistent);
+        }
+
+        @Test
+        public void getParentArtifactInfo() {
+            System.out.println("getParentArtifactInfo");
+            ExtensibleFirefoxDriver.ArtifactInfo parentInfo = ExtensibleFirefoxDriver.getParentArtifactInfo();
+            System.out.println(parentInfo);
+            assertEquals("parent artifactId", "antiprint-extension", parentInfo.getArtifactId());
+        }
+
+    }
 }

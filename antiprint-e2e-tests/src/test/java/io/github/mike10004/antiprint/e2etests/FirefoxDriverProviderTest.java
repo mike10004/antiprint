@@ -12,13 +12,13 @@ import java.util.Objects;
 public class FirefoxDriverProviderTest extends BrowserUsingTestBase<ExtensibleFirefoxDriver, String> {
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
         Tests.setUpGeckodriver();
     }
 
     @Test
     public void provide() throws Exception {
-        String userAgent = (String) Tests.getNavigatorTestCase(UserAgentFamily.CHROME, OperatingSystemFamily.OS_X).get("userAgent");
+        String userAgent = (String) Tests.getNavigatorTestCase(UserAgentFamily.FIREFOX, OperatingSystemFamily.OS_X).get("userAgent");
         WebDriver driver = createWebDriver(Objects.requireNonNull(userAgent));
         try {
             driver.get("https://www.example.com/");
@@ -32,4 +32,5 @@ public class FirefoxDriverProviderTest extends BrowserUsingTestBase<ExtensibleFi
     protected WebDriverProvider<? extends ExtensibleFirefoxDriver> getWebDriverProvider(String userAgent) {
         return new FirefoxDriverProvider(userAgent);
     }
+
 }
