@@ -88,6 +88,25 @@
                             <stripClassifier>true</stripClassifier>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-zip</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifact>
+                                    <groupId>${project.groupId}</groupId>
+                                    <version>${project.version}</version>
+                                    <artifactId>antiprint-extension</artifactId>
+                                    <type>zip</type>
+                                </artifact>
+                            </artifactItems>
+                            <stripVersion>true</stripVersion>
+                            <stripClassifier>true</stripClassifier>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

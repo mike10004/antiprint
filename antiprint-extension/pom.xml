@@ -15,6 +15,7 @@
         <karma.tests.skip>false</karma.tests.skip>
         <crx.packExtensionKey>${antiprint.crx.packExtensionKey}</crx.packExtensionKey>
         <crx.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.crx</crx.outputPathname>
+        <zip.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.zip</zip.outputPathname>
         <karma.browser>ChromiumHeadlessDockerable</karma.browser>
         <bash.executable>/bin/bash</bash.executable>
     </properties>
@@ -131,6 +132,16 @@
                         <goals>
                             <goal>pack-extension</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>create-zip</id>
+                        <goals>
+                            <goal>pack-extension</goal>
+                        </goals>
+                        <configuration>
+                            <excludeHeader>true</excludeHeader>
+                            <outputFile>${zip.outputPathname}</outputFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -49,7 +49,7 @@ public class FirefoxDriverProvider implements WebDriverProvider<ExtensibleFirefo
 
     protected File prepareZipFile() throws IOException {
         File zipFile = File.createTempFile("antiprint-extension-firefox", ".zip");
-        File crxFile = CrxProvider.ofDependency().provide();
+        File crxFile = ExtensionFileProvider.ofDependency(ExtensionFileFormat.ZIP).provide();
         try (InputStream crxStream = new FileInputStream(crxFile)) {
             CrxParser.getDefault().parseMetadata(crxStream);
             try (OutputStream out = new FileOutputStream(zipFile)) {

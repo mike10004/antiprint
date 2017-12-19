@@ -21,7 +21,7 @@ public class ChromeDriverProvider implements WebDriverProvider<ChromeDriver> {
     public static final String SYSPROP_EXTRA_CHROME_ARGS = "antiprint.chrome.extraArgs";
     public static final String SYSPROP_CHROME_EXECUTABLE_PATH = "antiprint.chrome.executablePath";
 
-    private CrxProvider crxProvider;
+    private ExtensionFileProvider crxProvider;
 
     @Nullable
     private final String userAgent;
@@ -31,10 +31,10 @@ public class ChromeDriverProvider implements WebDriverProvider<ChromeDriver> {
     }
 
     public ChromeDriverProvider(String userAgent) {
-        this(CrxProvider.ofDependency(), userAgent);
+        this(ExtensionFileProvider.ofDependency(ExtensionFileFormat.CRX), userAgent);
     }
 
-    public ChromeDriverProvider(CrxProvider crxProvider, @Nullable  String userAgent) {
+    public ChromeDriverProvider(ExtensionFileProvider crxProvider, @Nullable  String userAgent) {
         this.userAgent = userAgent;
         this.crxProvider = checkNotNull(crxProvider);
     }
