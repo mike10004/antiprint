@@ -155,7 +155,7 @@
                 <version>1.12</version>
                 <executions>
                     <execution>
-                        <id>attach-crx-artifact</id>
+                        <id>attach-extension-artifacts</id>
                         <phase>package</phase>
                         <goals>
                             <goal>attach-artifact</goal>
@@ -165,6 +165,10 @@
                                 <artifact>
                                     <file>${crx.outputPathname}</file>
                                     <type>crx</type>
+                                </artifact>
+                                <artifact>
+                                    <file>${zip.outputPathname}</file>
+                                    <type>zip</type>
                                 </artifact>
                             </artifacts>
                         </configuration>
