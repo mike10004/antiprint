@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mike10004</groupId>
-    <artifactId>antiprint-extension</artifactId>
+    <artifactId>antiprint</artifactId>
     <version>0.6-SNAPSHOT</version>
     <modules>
         <module>antiprint-artifact</module>
         <module>antiprint-e2e-tests</module>
         <module>extensible-firefox-webdriver</module>
     </modules>
-    <name>antiprint-extension</name>
+    <name>antiprint</name>
     <description>Antiprint extension for Chrome</description>
     <packaging>pom</packaging>
     <url>https://github.com/mike10004/antiprint</url>
