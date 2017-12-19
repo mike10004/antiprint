@@ -14,20 +14,11 @@
     <properties>
         <karma.tests.skip>false</karma.tests.skip>
         <crx.packExtensionKey>${antiprint.crx.packExtensionKey}</crx.packExtensionKey>
-        <crx.outputPathname>${project.parent.basedir}/antiprint-extension.crx</crx.outputPathname>
-        <crx.xvfbRun.disabled>true</crx.xvfbRun.disabled>
-        <crx.xvfbRun.enabled>false</crx.xvfbRun.enabled>
+        <crx.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.crx</crx.outputPathname>
         <karma.browser>ChromiumHeadlessDockerable</karma.browser>
         <bash.executable>/bin/bash</bash.executable>
     </properties>
     <profiles>
-        <profile>
-            <id>crx-xvfb-run</id>
-            <properties>
-                <crx.xvfbRun.disabled>false</crx.xvfbRun.disabled>
-                <crx.xvfbRun.enabled>true</crx.xvfbRun.enabled>
-            </properties>
-        </profile>
         <profile>
             <id>windows</id>
             <activation>
@@ -45,23 +36,13 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.4.0</version>
-                    <configuration>
-                        <environmentVariables>
-                            <CHROME_EXECUTABLE>${chrome.executablePath}</CHROME_EXECUTABLE>
-                        </environmentVariables>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>com.github.eirslett</groupId><!-- https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
                     <artifactId>frontend-maven-plugin</artifactId>
                     <version>1.0</version>
                     <configuration>
                         <nodeVersion>v8.9.0</nodeVersion>
                         <npmVersion>5.5.1</npmVersion>
-                        <workingDirectory>${project.parent.basedir}/antiprint-unit-tests</workingDirectory>
+                        <workingDirectory>${project.basedir}/src/test/extension</workingDirectory>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -70,8 +51,8 @@
                     <version>1.8</version>
                     <configuration>
                         <skipKarma>${karma.tests.skip}</skipKarma>
-                        <configFile>${project.parent.basedir}/antiprint-unit-tests/karma.conf.js</configFile>
-                        <karmaExecutable>${project.parent.basedir}/antiprint-unit-tests/node_modules/.bin/karma</karmaExecutable>
+                        <configFile>${project.basedir}/src/test/extension/karma.conf.js</configFile>
+                        <karmaExecutable>${project.basedir}/src/test/extension/node_modules/.bin/karma</karmaExecutable>
                         <singleRun>true</singleRun>
                         <autoWatch>false</autoWatch>
                         <reporters>dots,junit</reporters>
@@ -81,20 +62,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${project.parent.basedir}</directory>
-                            <includes>
-                                <include>antiprint-extension.crx</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -112,39 +79,6 @@
                                 <argument>${project.basedir}/src/test/other/check_version.py</argument>
                                 <argument>${project.version}</argument>
                                 <argument>${project.parent.basedir}/antiprint-extension/manifest.json</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>package-extension-crx</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${crx.xvfbRun.enabled}</skip>
-                            <executable>${bash.executable}</executable>
-                            <workingDirectory>${project.parent.basedir}</workingDirectory>
-                            <arguments>
-                                <argument>${project.basedir}/src/main/other/pack-extension.sh</argument>
-                                <argument>${crx.packExtensionKey}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>package-extension-crx-xvfb</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${crx.xvfbRun.disabled}</skip>
-                            <executable>xvfb-run</executable>
-                            <workingDirectory>${project.parent.basedir}</workingDirectory>
-                            <arguments>
-                                <argument>--auto-servernum</argument>
-                                <argument>${project.basedir}/src/main/other/pack-extension.sh</argument>
-                                <argument>${crx.packExtensionKey}</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -188,27 +122,24 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip> <!-- skip installation of main artifact -->
-                </configuration>
+                <groupId>com.github.mike10004</groupId>
+                <artifactId>crxtool-maven-plugin</artifactId>
+                <version>0.5</version>
                 <executions>
                     <execution>
-                        <id>install-crx</id>
-                        <phase>install</phase>
+                        <id>create-crx</id>
                         <goals>
-                            <goal>install-file</goal>
+                            <goal>pack-extension</goal>
                         </goals>
-                        <configuration>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <file>${crx.outputPathname}</file>
-                            <packaging>crx</packaging>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>-->
+                <!--<artifactId>maven-install-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<skip>true</skip> &lt;!&ndash; skip installation of main artifact &ndash;&gt;-->
+                <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
