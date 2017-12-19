@@ -1,4 +1,4 @@
-const fixturesPath = 'resources/fixtures';
+const fixturesPath = 'src/test/resources/fixtures';
 fixtures.setPath(fixturesPath);
 beforeAll(done => fixtures.load(done));
 const fullFixturesPath = '/base/' + fixturesPath + '/';
@@ -6,6 +6,10 @@ const fixtureFiles = Object.keys(window.__karma__.files).filter(function(file) {
       return file.indexOf(fullFixturesPath) === 0;
 });
 const fixtureNames = fixtureFiles.map(f => f.slice(fullFixturesPath.length));
+if (fixtureNames.length <= 0) {
+    throw 'no fixture names loaded; is fixturesPath correct? ' + fixturesPath;
+}
+
 window.platformReformSettings = {
   disabled: true
 };

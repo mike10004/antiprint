@@ -1,6 +1,7 @@
 {
-  "name": "antiprint-unit-tests",
+  "name": "antiprint-extension",
   "version": "1.0.0",
+  "private": true,
   "description": "Unit tests for the Antiprint extension for Chrome",
   "scripts": {
     "exercise": "karma start",
@@ -8,6 +9,10 @@
   },
   "author": "Mike Chaberski",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mike10004/antiprint.git"
+  },
   "devDependencies": {
     "jasmine": "^2.8.0",
     "karma": "^1.7.1",

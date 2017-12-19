@@ -16,7 +16,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'src/main/extension/lib/ua-parser.js',
-      'src/main/extension/extension/projection.js',
+      'src/main/extension/projection.js',
       require.resolve('karma-fixture-loader'),
       {
         pattern: 'src/test/resources/fixtures/*.json',
@@ -64,7 +64,9 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['ChromiumHeadless', 'ChromiumHeadlessDockerable', 'Chrome'],
+    browsers: [
+        'ChromiumHeadless',
+    ],
 
     customLaunchers: {
         ChromiumHeadlessDockerable: {
@@ -80,7 +82,7 @@ module.exports = function(config) {
     ],
 
     junitReporter : {
-        outputFile: 'target/failsafe-reports/TEST-results-karma.xml',
+        outputFile: 'target/karma-reports/TEST-results-karma.xml',
         suite: 'unit'
     },
 

@@ -43,7 +43,6 @@
                     <configuration>
                         <nodeVersion>v8.9.0</nodeVersion>
                         <npmVersion>5.5.1</npmVersion>
-                        <workingDirectory>${project.basedir}/src/test/extension</workingDirectory>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -52,8 +51,7 @@
                     <version>1.8</version>
                     <configuration>
                         <skipKarma>${karma.tests.skip}</skipKarma>
-                        <configFile>${project.basedir}/src/test/extension/karma.conf.js</configFile>
-                        <karmaExecutable>${project.basedir}/src/test/extension/node_modules/.bin/karma</karmaExecutable>
+                        <karmaExecutable>${project.basedir}/node_modules/.bin/karma</karmaExecutable>
                         <singleRun>true</singleRun>
                         <autoWatch>false</autoWatch>
                         <reporters>dots,junit</reporters>
@@ -69,7 +67,7 @@
                 <executions>
                     <execution>
                         <id>check-version</id>
-                        <phase>prepare-package</phase>
+                        <phase>test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
@@ -79,7 +77,7 @@
                             <arguments>
                                 <argument>${project.basedir}/src/test/other/check_version.py</argument>
                                 <argument>${project.version}</argument>
-                                <argument>${project.parent.basedir}/antiprint-extension/manifest.json</argument>
+                                <argument>${project.basedir}/src/main/extension/manifest.json</argument>
                             </arguments>
                         </configuration>
                     </execution>
