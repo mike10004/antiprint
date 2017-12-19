@@ -6,7 +6,7 @@
     <artifactId>antiprint</artifactId>
     <version>0.6-SNAPSHOT</version>
     <modules>
-        <module>antiprint-artifact</module>
+        <module>antiprint-extension</module>
         <module>antiprint-e2e-tests</module>
         <module>extensible-firefox-webdriver</module>
     </modules>
