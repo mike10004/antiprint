@@ -46,11 +46,22 @@ the value of the preference `media.peerconnection.enabled` to false.
 
 ## Caveats
 
+### Incompatible with some other Chrome extensions
+
 This extension is incompatible with some other extensions that affect a browser's
 fingerprint. Specifically, errors may occur when this extension is enabled alongside
 other extensions that define properties on `window.navigator` without allowing those
 definitions to be overwritten. An example of such an extension that is unfortunately
 incompatible is the excellent [User-Agent Switcher for Chrome][chrome-ua-switcher]. 
+
+### Firefox webdriver support
+
+The `extensible-firefox-webdriver` artifact provides an implementation of a Firefox
+webdriver that supports installing unsigned extensions. This is a feature in the
+webdriver spec that is not yet supported by the Selenium Java library (as of version 3.7.1).
+The naming convention for the artifact version is `A.B.CxD.E`, where `A.B.C` is the 
+Selenium Java version and `D.E` is the Antiprint extension version. For example,
+the version compatible with Selenium Java 3.7.1 is `3.7.1x0.6`.  
 
 ## Acknowledgments
 
