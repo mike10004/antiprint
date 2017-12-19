@@ -15,16 +15,16 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../antiprint-extension/lib/ua-parser.js',
-      '../antiprint-extension/projection.js',
+      'src/main/extension/lib/ua-parser.js',
+      'src/main/extension/extension/projection.js',
       require.resolve('karma-fixture-loader'),
       {
-        pattern: 'resources/fixtures/*.json',
+        pattern: 'src/test/resources/fixtures/*.json',
         watched: true,
         served: true,
         included: false
       },
-      '*-test.js'
+      'src/test/extension/*-test.js'
     ],
 
 
@@ -80,7 +80,7 @@ module.exports = function(config) {
     ],
 
     junitReporter : {
-        outputFile: '../../antiprint-artifact/target/failsafe-reports/TEST-results-karma.xml',
+        outputFile: 'target/failsafe-reports/TEST-results-karma.xml',
         suite: 'unit'
     },
 
