@@ -208,6 +208,11 @@
                 <artifactId>selenium-support</artifactId>
                 <version>${selenium.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.mike10004</groupId>
+                <artifactId>crxtool-core</artifactId>
+                <version>0.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

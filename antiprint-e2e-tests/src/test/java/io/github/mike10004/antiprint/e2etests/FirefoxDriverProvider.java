@@ -32,7 +32,7 @@ public class FirefoxDriverProvider implements WebDriverProvider<ExtensibleFirefo
     @Override
     public ExtensibleFirefoxDriver provide(Map<String, String> environment) throws IOException {
         FirefoxProfile profile = new FirefoxProfile();
-        File extensionZipFile = prepareZipFile();
+        File extensionZipFile = ExtensionFileProvider.ofDependency(ExtensionFileFormat.ZIP).provide();
         FirefoxOptions options = new FirefoxOptions();
         if (userAgent != null) {
             options.addPreference("general.useragent.override", userAgent);
@@ -45,18 +45,6 @@ public class FirefoxDriverProvider implements WebDriverProvider<ExtensibleFirefo
         ExtensibleFirefoxDriver driver = new ExtensibleFirefoxDriver(service, options);
         driver.installAddon(AddonInstallRequest.fromFile(extensionZipFile, AddonPersistence.TEMPORARY));
         return driver;
-    }
-
-    protected File prepareZipFile() throws IOException {
-        File zipFile = File.createTempFile("antiprint-extension-firefox", ".zip");
-        File crxFile = ExtensionFileProvider.ofDependency(ExtensionFileFormat.ZIP).provide();
-        try (InputStream crxStream = new FileInputStream(crxFile)) {
-            CrxParser.getDefault().parseMetadata(crxStream);
-            try (OutputStream out = new FileOutputStream(zipFile)) {
-                ByteStreams.copy(crxStream, out);
-            }
-        }
-        return zipFile;
     }
 
 }

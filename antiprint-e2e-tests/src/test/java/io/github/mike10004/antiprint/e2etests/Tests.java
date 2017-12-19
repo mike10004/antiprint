@@ -65,8 +65,11 @@ public class Tests {
     }
 
     public static ImmutableList<File> getNavigatorTestCaseFiles() {
-        File dir = getParentBaseDir().toPath().resolve("antiprint-unit-tests")
-                .resolve("resources/fixtures").toFile();
+        File dir = getParentBaseDir().toPath()
+                .resolve("antiprint-extension")
+                .resolve("src/test/resources")
+                .resolve("fixtures")
+                .toFile();
         return ImmutableList.copyOf(FileUtils.listFiles(dir, new String[]{"json"}, false));
     }
 

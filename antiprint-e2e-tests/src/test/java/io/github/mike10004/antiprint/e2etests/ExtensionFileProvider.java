@@ -59,10 +59,10 @@ public interface ExtensionFileProvider {
             }
             unzipped = Unzippage.unzip(in);
         }
-        File projectBasedir = new File(Tests.getProperties().getProperty("project.parent.basedir", "antiprint-extension"));
+        File projectBasedir = new File(Tests.getProperties().getProperty("project.parent.basedir"), "antiprint-extension");
         checkState(projectBasedir.isDirectory(), "not a directory: %s", projectBasedir);
         File extensionSourcesDir = new File(projectBasedir, "src/main/extension");
-        checkState(extensionSourcesDir.isDirectory(), "not a directory: %s", projectBasedir);
+        checkState(extensionSourcesDir.isDirectory(), "not a directory: %s", extensionSourcesDir);
         Unzippage expected = Tests.pseudoUnzippage(extensionSourcesDir.toPath());
         if (!Tests.filesEqual(expected, unzipped)) {
             List<String> allEntries = ImmutableList.<String>builder()

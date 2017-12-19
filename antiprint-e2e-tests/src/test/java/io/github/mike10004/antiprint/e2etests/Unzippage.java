@@ -189,6 +189,7 @@ public abstract class Unzippage {
         ZipEntry getEntry();
     }
 
+    @SuppressWarnings("RedundantThrows")
     private static class FileZipFacade implements ZipFacade {
 
         private final ZipFile zipFile;
@@ -231,7 +232,8 @@ public abstract class Unzippage {
             if (entry.isDirectory()) {
                 directoryEntries.add(entry.getName());
             } else {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(Ints.checkedCast(entry.getSize()));
+                int initialCapacity = Math.max(256, Ints.checkedCast(entry.getSize()));
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(initialCapacity);
                 try (InputStream input = session.openStream()) {
                     ByteStreams.copy(input, baos);
                 }

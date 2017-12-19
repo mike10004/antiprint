@@ -211,8 +211,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.mike10004</groupId>
-            <artifactId>crxtool</artifactId>
-            <version>0.2</version>
+            <artifactId>crxtool-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
