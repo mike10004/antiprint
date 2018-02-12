@@ -1,0 +1,11 @@
+version: "{build}"
+image: Visual Studio 2017
+build_script:
+- cmd: >-
+    set JAVA_HOME=C:\Program Files\Java\jdk1.8.0
+
+    mvn --version
+
+    echo "github token name: %GITHUB_TOKEN_NAME%"
+
+    mvn install --quiet --batch-mode -Dopenssl.tests.skip=true -Dwdm.gitHubTokenName=%GITHUB_TOKEN_NAME% -Dwdm.gitHubTokenSecret=%GITHUB_TOKEN_SECRET%
