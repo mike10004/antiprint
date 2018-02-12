@@ -1,4 +1,5 @@
-[![Travis build status](https://img.shields.io/travis/mike10004/selenium-help.svg)](https://travis-ci.org/mike10004/antiprint)
+[![Travis build status](https://travis-ci.org/mike10004/antiprint.svg?branch=master)](https://travis-ci.org/mike10004/antiprint)
+[![Build status](https://ci.appveyor.com/api/projects/status/8hyti3dw2jbxqklh?svg=true)](https://ci.appveyor.com/project/mike10004/antiprint)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.mike10004/antiprint-extension.svg)](https://repo1.maven.org/maven2/com/github/mike10004/antiprint-extension/)
 
 # antiprint
