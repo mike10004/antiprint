@@ -76,6 +76,7 @@ public class ChromeDriverProvider implements WebDriverProvider<ChromeDriver> {
         if (!value.isEmpty()) {
             try {
                 args = new CSVReader(new StringReader(value)).readNext();
+                System.out.println("using extra chrome args: " + java.util.Arrays.toString(args));
                 return args;
             } catch (IOException e) {
                 throw new RuntimeException(e);
