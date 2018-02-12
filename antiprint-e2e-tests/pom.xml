@@ -5,7 +5,7 @@
     <parent>
         <artifactId>antiprint</artifactId>
         <groupId>com.github.mike10004</groupId>
-        <version>0.7-SNAPSHOT</version>
+        <version>0.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,7 @@
     <properties>
         <chrome.extraArgs></chrome.extraArgs>
         <antiprint-extension.version>${project.version}</antiprint-extension.version>
-        <extensible-firefox-driver.version>3.7.1x${project.version}</extensible-firefox-driver.version>
+        <extensible-firefox-driver.version>3.9.1x${project.version}</extensible-firefox-driver.version>
     </properties>
 
     <profiles>
@@ -161,7 +161,7 @@
         <dependency>
             <groupId>com.github.mike10004</groupId>
             <artifactId>native-helper</artifactId>
-            <version>7.0.0</version>
+            <version>${common-helper.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

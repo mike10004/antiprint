@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mike10004</groupId>
     <artifactId>antiprint</artifactId>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.7</version>
     <modules>
         <module>antiprint-extension</module>
         <module>antiprint-e2e-tests</module>
@@ -51,6 +51,7 @@
         <chrome.executablePath></chrome.executablePath> <!-- empty means auto-detected by chromedriver -->
         <selenium.version>3.9.1</selenium.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <common-helper.version>8.0.5</common-helper.version>
     </properties>
     <build>
         <pluginManagement>
