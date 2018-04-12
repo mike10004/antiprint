@@ -127,15 +127,11 @@ public class Tests {
     }
 
     public static void setUpChromedriver() {
-        ChromeDriverManager.getInstance().version(chromedriverVersion()).setup();
+        Chromedrivers.findBestVersion().setup();
     }
 
-    public static String chromedriverVersion() {
-        return "2.33";
-    }
-
-    public static String geckodriverVersion() {
-        return "0.19.1";
+    private static String geckodriverVersion() {
+        return "0.20.1";
     }
 
     public static boolean filesEqual(Unzippage a, Unzippage b) throws IOException {
