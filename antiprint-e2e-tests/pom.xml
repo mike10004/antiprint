@@ -5,7 +5,7 @@
     <parent>
         <artifactId>antiprint</artifactId>
         <groupId>com.github.mike10004</groupId>
-        <version>0.7</version>
+        <version>0.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,7 @@
     <properties>
         <chrome.extraArgs></chrome.extraArgs>
         <antiprint-extension.version>${project.version}</antiprint-extension.version>
-        <extensible-firefox-driver.version>3.9.1x${project.version}</extensible-firefox-driver.version>
+        <extensible-firefox-driver.version>3.11.0x${project.version}</extensible-firefox-driver.version>
     </properties>
 
     <profiles>
@@ -218,6 +218,12 @@
             <groupId>com.github.mike10004</groupId>
             <artifactId>extensible-firefox-webdriver</artifactId>
             <version>${extensible-firefox-driver.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

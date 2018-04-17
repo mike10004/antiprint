@@ -49,7 +49,7 @@ public abstract class WebrtcIpLeakageTestBase extends BrowserUsingTestBase<WebDr
     public void confirmNoLeakage_local() throws Exception {
         byte[] pageHtmlBytes = Resources.toByteArray(getClass().getResource("/leak-ip-thru-webrtc.html"));
         NanoServer server = NanoServer.builder()
-                .get(NanoResponse.status(200).content(MediaType.HTML_UTF_8, pageHtmlBytes).build())
+                .get(session -> NanoResponse.status(200).content(MediaType.HTML_UTF_8, pageHtmlBytes).build())
                 .build();
         confirmNoLeakage(new Fixture<NanoControl>() {
 

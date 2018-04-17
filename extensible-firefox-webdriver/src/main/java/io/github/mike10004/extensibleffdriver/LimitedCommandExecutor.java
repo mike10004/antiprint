@@ -107,7 +107,7 @@ class LimitedCommandExecutor {
         Commands.checkSupportedCommand(command.getName());
         HttpRequest httpRequest = commandCodec.encode(command);
         try {
-            HttpResponse httpResponse = clientProvider.get().execute(httpRequest, true);
+            HttpResponse httpResponse = clientProvider.get().execute(httpRequest);
             Response response = responseCodec.decode(httpResponse);
             if (response.getSessionId() == null) {
                 if (httpResponse.getTargetHost() != null) {

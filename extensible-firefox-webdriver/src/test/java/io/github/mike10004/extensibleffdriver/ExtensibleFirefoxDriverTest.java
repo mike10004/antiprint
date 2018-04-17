@@ -9,8 +9,6 @@ import io.github.mike10004.nanochamp.server.NanoServer;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -27,9 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ExtensibleFirefoxDriverTest {
@@ -39,7 +35,7 @@ public class ExtensibleFirefoxDriverTest {
 
     @BeforeClass
     public static void setUpGeckodriver() {
-        FirefoxDriverManager.getInstance().version("0.19.1").setup();
+        FirefoxDriverManager.getInstance().setup();
     }
 
     @Test
@@ -82,7 +78,7 @@ public class ExtensibleFirefoxDriverTest {
                 .build();
         String html = "<!DOCTYPE html><html><body></body></html>";
         NanoServer server = NanoServer.builder()
-                .get(NanoResponse.status(200).content(MediaType.HTML_UTF_8, html, UTF_8).build())
+                .get(session -> NanoResponse.status(200).content(MediaType.HTML_UTF_8, html).build())
                 .build();
         try (NanoControl control = server.startServer()) {
             ExtensibleFirefoxDriver driver = new ExtensibleFirefoxDriver(gecko, new FirefoxOptions());
