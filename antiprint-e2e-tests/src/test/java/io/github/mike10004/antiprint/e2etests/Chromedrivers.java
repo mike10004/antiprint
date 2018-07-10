@@ -96,6 +96,8 @@ public class Chromedrivers {
     //        2.15            42+
 
     private static final ImmutableList<Compatibility> COMPATIBILITY_TABLE = ImmutableList.<Compatibility>builder()
+            .add(Compatibility.of("2.40", 66, 68))
+            .add(Compatibility.of("2.38", 65, 67))
             .add(Compatibility.of("2.37", 64, 66))
             .add(Compatibility.of("2.36", 63, 65))
             .add(Compatibility.of("2.35", 62, 64))
