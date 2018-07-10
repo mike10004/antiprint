@@ -124,13 +124,17 @@
             <plugin>
                 <groupId>com.github.mike10004</groupId>
                 <artifactId>crxtool-maven-plugin</artifactId>
-                <version>0.5</version>
+                <version>0.8</version>
                 <executions>
                     <execution>
                         <id>create-crx</id>
                         <goals>
                             <goal>pack-extension</goal>
                         </goals>
+                        <configuration>
+                            <privateKey>${crx.packExtensionKey}</privateKey>
+                            <outputFile>${crx.outputPathname}</outputFile>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>create-zip</id>
