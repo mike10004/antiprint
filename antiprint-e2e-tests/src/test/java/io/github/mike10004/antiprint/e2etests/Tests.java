@@ -131,7 +131,7 @@ public class Tests {
     }
 
     private static String geckodriverVersion() {
-        return "0.20.1";
+        return "0.21.1";
     }
 
     public static boolean filesEqual(Unzippage a, Unzippage b) throws IOException {
