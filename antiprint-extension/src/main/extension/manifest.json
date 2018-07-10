@@ -28,5 +28,11 @@
   ],
   "web_accessible_resources": [
     "browser-settings.html"
-  ]
+  ],
+  "applications": {
+    "gecko": {
+      "id": "antiprint@mike10004.github.io",
+      "strict_min_version": "49.0"
+    }
+  }
 }
