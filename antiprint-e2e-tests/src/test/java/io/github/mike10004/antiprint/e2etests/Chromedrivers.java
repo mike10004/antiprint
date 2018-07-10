@@ -38,6 +38,8 @@ import static java.util.Objects.requireNonNull;
 
 public class Chromedrivers {
 
+    private static final String SYSPROP_CHROMEDRIVER_VERSION = "antiprint.chromedriver.version";
+
     private static final Logger log = LoggerFactory.getLogger(Chromedrivers.class);
 
     private Chromedrivers() {}
@@ -116,25 +118,27 @@ public class Chromedrivers {
     private static WebDriverManager configureWebDriverManager(@Nullable String chromedriverVersion) {
         WebDriverManager m = ChromeDriverManager.getInstance();
         if (chromedriverVersion != null) {
-            return m.version(chromedriverVersion);
+            m = m.version(chromedriverVersion);
         }
         return m;
     }
 
     static String determineBestChromedriverVersion() {
-        @Nullable String chromeVersionString = new WhichingChromeVersionQuerier().getChromeVersionString();
-        if (chromeVersionString == null && SystemUtils.IS_OS_WINDOWS) {
-            chromeVersionString = new WindowsChromeVersionQuerier().getChromeVersionString();
-        }
-        String chromedriverVersion = null;
-        if (chromeVersionString != null) {
-            int chromeMajorVersion = -1;
-            try {
-                chromeMajorVersion = parseChromeMajorVersion(chromeVersionString);
-            } catch (RuntimeException e) {
-                log.info("failed to parse major version from {} due to {}", StringUtils.abbreviate(chromeVersionString, 128), e.toString());
+        @Nullable String chromedriverVersion = Strings.emptyToNull(System.getProperty(SYSPROP_CHROMEDRIVER_VERSION));
+        if (chromedriverVersion == null) {
+            @Nullable String chromeVersionString = new WhichingChromeVersionQuerier().getChromeVersionString();
+            if (chromeVersionString == null && SystemUtils.IS_OS_WINDOWS) {
+                chromeVersionString = new WindowsChromeVersionQuerier().getChromeVersionString();
             }
-            chromedriverVersion = getFinderInstance().findNewestCompatibleChromedriverVersion(chromeMajorVersion);
+            if (chromeVersionString != null) {
+                int chromeMajorVersion = -1;
+                try {
+                    chromeMajorVersion = parseChromeMajorVersion(chromeVersionString);
+                } catch (RuntimeException e) {
+                    log.info("failed to parse major version from {} due to {}", StringUtils.abbreviate(chromeVersionString, 128), e.toString());
+                }
+                chromedriverVersion = getFinderInstance().findNewestCompatibleChromedriverVersion(chromeMajorVersion);
+            }
         }
         return chromedriverVersion;
     }

@@ -6,6 +6,8 @@ build_script:
 
     mvn --version
 
-    echo "github token name: %GITHUB_TOKEN_NAME%"
+    echo "environment: GITHUB_TOKEN_NAME=%GITHUB_TOKEN_NAME%"
 
-    mvn install --quiet --batch-mode -Dopenssl.tests.skip=true -Dwdm.gitHubTokenName=%GITHUB_TOKEN_NAME% -Dwdm.gitHubTokenSecret=%GITHUB_TOKEN_SECRET%
+    echo "environment: CHROMEDRIVER_VERSION=%CHROMEDRIVER_VERSION%"
+
+    mvn install --quiet --batch-mode -Dopenssl.tests.skip=true -Dwdm.gitHubTokenName=%GITHUB_TOKEN_NAME% -Dwdm.gitHubTokenSecret=%GITHUB_TOKEN_SECRET% -Dantiprint.chromedriver.version=%CHROMEDRIVER_VERSION%
