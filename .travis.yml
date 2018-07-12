@@ -10,4 +10,4 @@ notifications:
 before_install: dpkg-query -l google-chrome-stable || true
 install: dpkg-query -l xvfb chromium-browser firefox
 before_script: which firefox && firefox --version
-script: mvn -B install -Dantiprint.chrome.extraArgs=--no-sandbox -Dwdm.gitHubTokenName=$GITHUB_TOKEN_NAME -Dwdm.gitHubTokenSecret=$GITHUB_TOKEN_SECRET -Dwebdriver.firefox.bin=/usr/bin/firefox
+script: mvn --batch-mode $MAVEN_OPTIONS install -Dantiprint.chrome.extraArgs=--no-sandbox -Dwdm.gitHubTokenName=$GITHUB_TOKEN_NAME -Dwdm.gitHubTokenSecret=$GITHUB_TOKEN_SECRET -Dwebdriver.firefox.bin=/usr/bin/firefox -Dwdm.chromeDriverVersion=$CHROMEDRIVER_VERSION

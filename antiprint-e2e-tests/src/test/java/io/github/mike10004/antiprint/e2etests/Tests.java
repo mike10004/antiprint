@@ -9,7 +9,6 @@ import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.ReadableUserAgent;
@@ -19,6 +18,7 @@ import net.sf.uadetector.service.UADetectorServiceFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -130,8 +130,9 @@ public class Tests {
         Chromedrivers.findBestVersion().setup();
     }
 
+    @Nullable
     private static String geckodriverVersion() {
-        return "0.21.1";
+        return System.getProperty("wdm.geckoDriverVersion");
     }
 
     public static boolean filesEqual(Unzippage a, Unzippage b) throws IOException {

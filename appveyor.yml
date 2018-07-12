@@ -10,4 +10,8 @@ build_script:
 
     echo "environment: CHROMEDRIVER_VERSION=%CHROMEDRIVER_VERSION%"
 
-    mvn install --quiet --batch-mode -Dopenssl.tests.skip=true -Dwdm.gitHubTokenName=%GITHUB_TOKEN_NAME% -Dwdm.gitHubTokenSecret=%GITHUB_TOKEN_SECRET% -Dantiprint.chromedriver.version=%CHROMEDRIVER_VERSION%
+    echo "environment: GECKODRIVER_VERSION=%GECKODRIVER_VERSION%"
+
+    echo "environment: MAVEN_OPTIONS=%MAVEN_OPTIONS%"
+
+    mvn install %MAVEN_OPTIONS% --batch-mode -Dopenssl.tests.skip=true -Dwdm.gitHubTokenName=%GITHUB_TOKEN_NAME% -Dwdm.gitHubTokenSecret=%GITHUB_TOKEN_SECRET% -Dwdm.chromeDriverVersion=%CHROMEDRIVER_VERSION% -Dwdm.geckoDriverVersion=%GECKODRIVER_VERSION%

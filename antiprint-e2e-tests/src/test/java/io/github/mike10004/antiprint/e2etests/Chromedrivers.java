@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Chromedrivers {
 
-    private static final String SYSPROP_CHROMEDRIVER_VERSION = "antiprint.chromedriver.version";
+    private static final String SYSPROP_CHROMEDRIVER_VERSION = "wdm.chromeDriverVersion";
 
     private static final Logger log = LoggerFactory.getLogger(Chromedrivers.class);
 
