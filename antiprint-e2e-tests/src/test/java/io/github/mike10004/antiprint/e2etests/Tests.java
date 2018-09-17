@@ -9,6 +9,7 @@ import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.ReadableUserAgent;
@@ -18,7 +19,6 @@ import net.sf.uadetector.service.UADetectorServiceFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -123,16 +123,11 @@ public class Tests {
     }
 
     public static void setUpGeckodriver() {
-        FirefoxDriverManager.getInstance().version(geckodriverVersion()).setup();
+        FirefoxDriverManager.getInstance().setup();
     }
 
     public static void setUpChromedriver() {
-        Chromedrivers.findBestVersion().setup();
-    }
-
-    @Nullable
-    private static String geckodriverVersion() {
-        return System.getProperty("wdm.geckoDriverVersion");
+        ChromeDriverManager.getInstance().setup();
     }
 
     public static boolean filesEqual(Unzippage a, Unzippage b) throws IOException {
