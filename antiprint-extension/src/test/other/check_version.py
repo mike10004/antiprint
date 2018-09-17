@@ -34,7 +34,7 @@ def check_manifest(crx_manifest, required_version):
         manifest = json.load(ifile)
     manifest_version = manifest['version']
     if manifest_version != required_version:
-        print("manifest version %s != pom version %s" % (required_version, manifest_version), file=sys.stderr)
+        print("manifest version (from %s) %s != required pom version %s" % (crx_manifest, manifest_version, required_version), file=sys.stderr)
         exit(ERR_VERSION_MISMATCH)
 
 
