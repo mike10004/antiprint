@@ -3,14 +3,29 @@
 from __future__ import print_function
 import sys
 import json
+import re
+import xml.etree.ElementTree as ElementTree
 from argparse import ArgumentParser
 
 ERR_VERSION_MISMATCH = 2
 
 
 def check_efw_pom(pom_file, required_version):
-    # Version is interpolated from ${project.parent.version}, so this check is no longer necessary
-    pass
+    ns = {
+        'pom': 'http://maven.apache.org/POM/4.0.0'
+    }
+    tree = ElementTree.parse(pom_file)
+    root = tree.getroot()
+    version_el = root.findall('pom:version', ns)[0]
+    version = version_el.text
+    m = re.match(r'^\d+\.\d+\.\d+x(.+)', version)
+    if m is None:
+        print("extensible-firefox-webdriver pom version does not match expected pattern: {}".format(version), file=sys.stderr)
+        exit(ERR_VERSION_MISMATCH)
+    suffix = m.group(1)
+    if suffix != required_version:
+        print("extensible-firefox-webdriver pom version {} != extension artifact pom version {}".format(suffix, required_version), file=sys.stderr)
+        exit(ERR_VERSION_MISMATCH)
 
 
 def check_manifest(crx_manifest, required_version):
