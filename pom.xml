@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mike10004</groupId>
     <artifactId>antiprint</artifactId>
-    <version>0.10</version>
+    <version>0.11-SNAPSHOT</version>
     <modules>
         <module>antiprint-extension</module>
         <module>antiprint-e2e-tests</module>
@@ -52,7 +52,20 @@
         <selenium.version>3.14.0</selenium.version>
         <slf4j.version>1.7.25</slf4j.version>
         <common-helper.version>8.0.5</common-helper.version>
+        <surefire.tests.skip>false</surefire.tests.skip>
+        <failsafe.tests.skip>false</failsafe.tests.skip>
+        <karma.tests.skip>false</karma.tests.skip>
     </properties>
+    <profiles>
+        <profile>
+            <id>skip-tests</id>
+            <properties>
+                <surefire.tests.skip>true</surefire.tests.skip>
+                <failsafe.tests.skip>true</failsafe.tests.skip>
+                <karma.tests.skip>true</karma.tests.skip>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <pluginManagement>
             <plugins>
@@ -79,6 +92,16 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.0</version>
+                    <configuration>
+                        <skipTests>${surefire.tests.skip}</skipTests>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.22.0</version>
+                    <configuration>
+                        <skipTests>${failsafe.tests.skip}</skipTests>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>

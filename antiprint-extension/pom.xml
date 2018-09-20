@@ -5,14 +5,13 @@
     <parent>
         <artifactId>antiprint</artifactId>
         <groupId>com.github.mike10004</groupId>
-        <version>0.10</version>
+        <version>0.11-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>antiprint-extension</artifactId>
     <packaging>pom</packaging>
     <properties>
-        <karma.tests.skip>false</karma.tests.skip>
         <crx.packExtensionKey>${antiprint.crx.packExtensionKey}</crx.packExtensionKey>
         <crx.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.crx</crx.outputPathname>
         <zip.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.zip</zip.outputPathname>
@@ -148,12 +147,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<artifactId>maven-install-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<skip>true</skip> &lt;!&ndash; skip installation of main artifact &ndash;&gt;-->
-                <!--</configuration>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
