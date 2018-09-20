@@ -1,10 +1,12 @@
 function SignatureCrafter(settings) {
 
     const KNOWN_LINUXEN = ['Ubuntu', 'Debian'];
+    const MAKE_EMPTY = ['oscpu', 'appVersion'];
     const userAgent = (settings || {})['userAgent'] || window.navigator.userAgent;
     const signature = UAParser(userAgent);
     const navigatorProjection = {};
     navigatorProjection.platform = constructPlatform(signature);
+    MAKE_EMPTY.forEach(property => navigatorProjection[property] = '');
 
     function mapArch(arch, osName) {
         if (osName === 'Linux' && arch === 'amd64') {

@@ -1,21 +1,43 @@
 function injectProjection(projection) {
 
-    const PROJECTED_NAVIGATOR_PROPERTIES = ['platform'];
+    const MODE_ALWAYS_REDEFINE = 'redefine';
+    const MODE_REDEFINE_IF_PRESENT = 'maybeRedefine';
+
+    class PropertySpec {
+        constructor(name, mode) {
+            this.name = name;
+            this.mode = mode || MODE_ALWAYS_REDEFINE;
+        }
+
+        shouldDefine(navigator) {
+            return this.mode === MODE_ALWAYS_REDEFINE || (this.mode === MODE_REDEFINE_IF_PRESENT && this.name in navigator);
+        }
+    }
+
+    const PROJECTED_NAVIGATOR_PROPERTIES = [
+        new PropertySpec('platform'),
+        new PropertySpec('oscpu', MODE_REDEFINE_IF_PRESENT),
+        new PropertySpec('appVersion', MODE_REDEFINE_IF_PRESENT),
+    ];
     const NOOP = x => {};
 
     const previous = {};
-    PROJECTED_NAVIGATOR_PROPERTIES.forEach(property => {
-        previous[property] = navigator[property];
-        try {
-            Object.defineProperty(navigator, property, {
-                get: function () {
-                    return projection.navigator[property];
-                },
-                set: NOOP,
-                configurable: true
-            });
-        } catch (err) {
-            console.debug('platform-reform: error defining navigator property', property, err);
+
+    PROJECTED_NAVIGATOR_PROPERTIES.forEach(propSpec => {
+        if (propSpec.shouldDefine(navigator)) {
+            const property = propSpec.name;
+            previous[property] = navigator[property];
+            try {
+                Object.defineProperty(navigator, property, {
+                    get: function () {
+                        return projection.navigator[property];
+                    },
+                    set: NOOP,
+                    configurable: true
+                });
+            } catch (err) {
+                console.debug('injectProjection: error defining navigator property', property, err);
+            }
         }
     });
 
