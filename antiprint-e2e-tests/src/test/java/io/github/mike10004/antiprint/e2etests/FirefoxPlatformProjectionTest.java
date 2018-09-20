@@ -15,16 +15,16 @@ public class FirefoxPlatformProjectionTest extends PlatformProjectionTestBase {
 
     @Test
     public void windows() throws Exception {
-        testNavigatorProperties(UserAgentFamily.FIREFOX, OperatingSystemFamily.WINDOWS);
+        testNavigatorProperties(UserAgentFamily.FIREFOX, OperatingSystemFamily.WINDOWS, new DefaultEvaluator());
     }
 
     @Test
     public void osx() throws Exception {
-        testNavigatorProperties(UserAgentFamily.FIREFOX, OperatingSystemFamily.OS_X);
+        testNavigatorProperties(UserAgentFamily.FIREFOX, OperatingSystemFamily.OS_X, new DefaultEvaluator());
     }
     @Test
     public void linux() throws Exception {
-        testNavigatorProperties(UserAgentFamily.FIREFOX, OperatingSystemFamily.LINUX);
+        testNavigatorProperties(UserAgentFamily.FIREFOX, OperatingSystemFamily.LINUX, new DefaultEvaluator());
     }
 
     @Override

@@ -34,6 +34,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Tests {
@@ -60,8 +61,19 @@ public class Tests {
         return getProperties().getProperty(key, defaultValue);
     }
 
+    private static boolean isUnfiltered(String key, String value) {
+        return ("${" + key + "}").equals(value);
+    }
+
     public static File getParentBaseDir() {
-        return new File(getProperty("project.parent.basedir"));
+        String val = getProperty("project.parent.basedir");
+        if (isUnfiltered("project.parent.basedir", val)) {
+            val = getProperty("project.basedir");
+            checkState(!isUnfiltered("project.basedir", val), "property unfiltered: %s", val);
+            File basedir = new File(val);
+            return basedir.getParentFile();
+        }
+        return new File(val);
     }
 
     public static ImmutableList<File> getNavigatorTestCaseFiles() {
@@ -70,7 +82,8 @@ public class Tests {
                 .resolve("src/test/resources")
                 .resolve("fixtures")
                 .toFile();
-        return ImmutableList.copyOf(FileUtils.listFiles(dir, new String[]{"json"}, false));
+        Collection<File> files = FileUtils.listFiles(dir, new String[]{"json"}, false);
+        return ImmutableList.copyOf(files);
     }
 
     public static Function<CharSource, Map<String, Object>> navigatorObjectLoader() {

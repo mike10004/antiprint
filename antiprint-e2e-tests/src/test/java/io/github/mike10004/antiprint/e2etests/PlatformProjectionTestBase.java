@@ -1,6 +1,7 @@
 package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 import com.google.common.net.MediaType;
@@ -15,21 +16,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<WebDriver, String> {
 
-    protected void testNavigatorProperties(UserAgentFamily requiredUserAgentFamily, OperatingSystemFamily requiredOsFamily) throws IOException, URISyntaxException, InterruptedException {
+    protected void testNavigatorProperties(UserAgentFamily requiredUserAgentFamily, OperatingSystemFamily requiredOsFamily, NavigatorEvaluator evaluator) throws Exception {
         Map<String, Object> navigator = Tests.getNavigatorTestCasesByUserAgent(userAgent -> {
             return userAgent.getFamily() == requiredUserAgentFamily
                     && userAgent.getOperatingSystem().getFamily() == requiredOsFamily;
@@ -52,7 +53,7 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
                     Object navigatorPropertyValue = ((JavascriptExecutor)driver).executeScript(js);
                     jsResults.put(navigatorPropertyName, navigatorPropertyValue);
                 });
-                assertNavigatorsEqual("js execution", navigator, jsResults);
+                evaluator.evaluate("js execution", navigator, jsResults);
                 /*
                  * Content is written with document.write, so we don't have to
                  * use a WebDriverWait to poll the page
@@ -64,26 +65,53 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
                 assertNotNull("div#content contents", json);
                 Map<String, Object> actual = Tests.navigatorObjectLoader().apply(CharSource.wrap(json));
                 maybePauseUntilKilled();
-                assertNavigatorsEqual("json on page", navigator, actual);
+                evaluator.evaluate("json on page", navigator, actual);
             }
         } finally {
             driver.quit();
         }
     }
 
-    private static void assertNavigatorsEqual(String source, Map<String, Object> expected, Map<String, Object> actual) {
-        List<Map.Entry<String, Object>> mismatches = new ArrayList<>();
-        expected.forEach((k, v) -> {
-            System.out.format("%s = %s%n", k, actual.get(k));
-            if (isImportant(k) && !Objects.equals(expected.get(k), actual.get(k))) {
-                mismatches.add(actual.entrySet().stream().filter(e -> k.equals(e.getKey())).findFirst().orElseThrow(IllegalStateException::new));
-            }
-        });
-        assertEquals("expected zero navigator property mismatches in " + source, Collections.emptyList(), mismatches);
+    protected interface NavigatorEvaluator {
+        void evaluate(String source, Map<String, Object> expected, Map<String, Object> actual) throws Exception;
     }
 
-    private static boolean isImportant(String navigatorProperty) {
-        return "platform".equals(navigatorProperty);
+    protected static class DefaultEvaluator implements NavigatorEvaluator {
+        @Override
+        public void evaluate(String source, Map<String, Object> expected, Map<String, Object> actual) {
+            List<Map.Entry<String, Object>> mismatches = new ArrayList<>();
+            //noinspection Java8MapForEach
+            expected.entrySet().forEach(entry -> {
+                String k = entry.getKey();
+                System.out.format("%s = %s%n", k, actual.get(k));
+                Object actualValue = actual.get(k);
+                boolean ok = evaluateOne(k, expected.get(k), actualValue);
+                if (!ok) {
+                    mismatches.add(new AbstractMap.SimpleImmutableEntry<>(k, actualValue));
+                }
+            });
+            assertEquals("expected zero navigator property mismatches in " + source, Collections.emptyList(), mismatches);
+        }
+
+        protected boolean evaluateOne(String propertyName, Object expectedValue, @Nullable Object actualValue) {
+            BiPredicate<Object, Object> predicate = predicates.get(propertyName);
+            if (predicate != null) {
+                return predicate.test(expectedValue, actualValue);
+            }
+            return true;
+        }
+
+        private static final BiPredicate<Object, Object> NULL_OR_EMPTY_OR_EQUAL = (expectedValue, actualValue) ->  actualValue == null || "".equals(actualValue) || Objects.equals(expectedValue, actualValue);
+
+        private static final ImmutableMap<String, BiPredicate<Object, Object>> predicates = ImmutableMap.<String, BiPredicate<Object, Object>>builder()
+                .put("platform", Objects::equals)
+                .put("oscpu", NULL_OR_EMPTY_OR_EQUAL)
+                .put("appVersion", NULL_OR_EMPTY_OR_EQUAL)
+                .build();
+
+
     }
+
+
 
 }

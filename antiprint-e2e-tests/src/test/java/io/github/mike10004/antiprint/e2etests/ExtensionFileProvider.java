@@ -39,8 +39,8 @@ public interface ExtensionFileProvider {
                 }
                 if (!isOutdatedCrxAllowed() && !isUpToDate(extensionFile, format)) {
                     throw new IllegalStateException("extension must be re-built because source files are " +
-                            "more recent than crx/zip file; execute 'process-test-resources' goal in " +
-                            "antiprint-e2e-tests directory");
+                            "more recent than crx/zip file; build antiprint-extension module and then " +
+                            "execute 'process-test-resources' goal in antiprint-e2e-tests directory");
                 }
                 return extensionFile;
             }
@@ -59,7 +59,7 @@ public interface ExtensionFileProvider {
             }
             unzipped = Unzippage.unzip(in);
         }
-        File projectBasedir = new File(Tests.getProperties().getProperty("project.parent.basedir"), "antiprint-extension");
+        File projectBasedir = new File(Tests.getParentBaseDir(), "antiprint-extension");
         checkState(projectBasedir.isDirectory(), "not a directory: %s", projectBasedir);
         File extensionSourcesDir = new File(projectBasedir, "src/main/extension");
         checkState(extensionSourcesDir.isDirectory(), "not a directory: %s", extensionSourcesDir);

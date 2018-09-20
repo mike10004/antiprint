@@ -15,16 +15,16 @@ public class ChromePlatformProjectionTest extends PlatformProjectionTestBase {
 
     @Test
     public void windows() throws Exception {
-        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.WINDOWS);
+        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.WINDOWS, new DefaultEvaluator());
     }
 
     @Test
     public void osx() throws Exception {
-        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.OS_X);
+        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.OS_X, new DefaultEvaluator());
     }
     @Test
     public void linux() throws Exception {
-        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.LINUX);
+        testNavigatorProperties(UserAgentFamily.CHROME, OperatingSystemFamily.LINUX, new DefaultEvaluator());
     }
 
     @Override
