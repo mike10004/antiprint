@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mike10004</groupId>
     <artifactId>antiprint</artifactId>
-    <version>0.12</version>
+    <version>0.14-SNAPSHOT</version>
     <modules>
         <module>antiprint-extension</module>
         <module>antiprint-e2e-tests</module>
