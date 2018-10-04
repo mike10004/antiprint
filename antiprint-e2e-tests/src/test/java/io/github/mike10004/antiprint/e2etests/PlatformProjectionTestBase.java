@@ -33,7 +33,7 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
 
     protected void testNavigatorProperties(UserAgentFamily requiredUserAgentFamily, OperatingSystemFamily requiredOsFamily, NavigatorEvaluator evaluator) throws Exception {
         BrowserFingerprintTestCase testCase = Tests.getNavigatorTestCase(requiredUserAgentFamily, requiredOsFamily);
-        System.out.format("expected navigator: %s%n", Joiner.on(System.lineSeparator()).withKeyValueSeparator(" = ").join(testCase.output.window.navigator));
+        System.out.format("%s/%s%nexpected navigator: %s%n", requiredUserAgentFamily, requiredOsFamily, Joiner.on(System.lineSeparator()).withKeyValueSeparator(" = ").join(testCase.output.window.navigator));
         String userAgent = testCase.input.userAgent;
         byte[] html = Resources.toByteArray(getClass().getResource("/print-navigator.html"));
         NanoServer server = NanoServer.builder()
@@ -127,7 +127,7 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
                     mismatches.add(new Mismatch(k, predicate, actualValue));
                 }
             });
-            mismatches.forEach(m -> System.out.format("mismatch: %s%n", m.describe()));
+            mismatches.forEach(m -> System.out.format("MISMATCH: %s%n", m.describe()));
             assertEquals("expected zero navigator property mismatches in " + description, Collections.emptyList(), mismatches);
         }
 

@@ -203,6 +203,10 @@ class BrowserFingerprintTestCase {
         public int hashCode() {
             return Objects.hash(mode, data);
         }
+
+        public String toString() {
+            return String.format("Requirement{%s}", asPredicate());
+        }
     }
 
     public static List<BrowserFingerprintTestCase> loadAll() throws IOException {

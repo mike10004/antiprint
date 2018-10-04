@@ -54,8 +54,9 @@
             "data": "true"
           },
           "hardwareConcurrency": {
-            "mode": "literal",
-            "data": "8"
+            "mode": "regex",
+            "allowVacant": true,
+            "data": "(\\d+)?"
           },
           "vendor": {
             "mode": "literal",
@@ -80,6 +81,7 @@
         "navigator": {
           "appVersion": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
           },
           "product": {
@@ -123,8 +125,9 @@
             "data": "true"
           },
           "hardwareConcurrency": {
-            "mode": "literal",
-            "data": "8"
+            "mode": "regex",
+            "allowVacant": true,
+            "data": "(\\d+)?"
           },
           "vendor": {
             "mode": "literal",
@@ -149,6 +152,7 @@
         "navigator": {
           "appVersion": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
           },
           "product": {
@@ -192,8 +196,9 @@
             "data": "true"
           },
           "hardwareConcurrency": {
-            "mode": "literal",
-            "data": "4"
+            "mode": "regex",
+            "allowVacant": true,
+            "data": "(\\d+)?"
           },
           "vendor": {
             "mode": "literal",
@@ -218,6 +223,7 @@
         "navigator": {
           "appVersion": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/61.0.3163.100 Chrome/61.0.3163.100 Safari/537.36"
           },
           "product": {
@@ -261,8 +267,9 @@
             "data": "true"
           },
           "hardwareConcurrency": {
-            "mode": "literal",
-            "data": "8"
+            "mode": "regex",
+            "allowVacant": true,
+            "data": "(\\d+)?"
           },
           "vendor": {
             "mode": "literal",
@@ -287,6 +294,7 @@
         "navigator": {
           "appVersion": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "5.0 (Windows)"
           },
           "product": {
@@ -307,6 +315,7 @@
           },
           "buildID": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "20161031133903"
           },
           "language": {
@@ -334,8 +343,9 @@
             "data": "unspecified"
           },
           "oscpu": {
-            "mode": "regex",
-            "data": "^(Windows NT 6.3; WOW64)?$"
+            "mode": "literal",
+            "allowVacant": true,
+            "data": "Windows NT 6.3; WOW64"
           },
           "vendor": {
             "mode": "literal",
@@ -360,6 +370,7 @@
         "navigator": {
           "appVersion": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "5.0 (Macintosh)"
           },
           "product": {
@@ -380,6 +391,7 @@
           },
           "buildID": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "20161019084923"
           },
           "language": {
@@ -403,8 +415,9 @@
             "data": "true"
           },
           "hardwareConcurrency": {
-            "mode": "literal",
-            "data": "8"
+            "mode": "regex",
+            "allowVacant": true,
+            "data": "(\\d+)?"
           },
           "doNotTrack": {
             "mode": "literal",
@@ -412,6 +425,7 @@
           },
           "oscpu": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "Intel Mac OS X 10.12"
           },
           "vendor": {
@@ -437,6 +451,7 @@
         "navigator": {
           "appVersion": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "5.0 (X11)"
           },
           "product": {
@@ -457,6 +472,7 @@
           },
           "buildID": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "20171003100843"
           },
           "language": {
@@ -480,8 +496,9 @@
             "data": "true"
           },
           "hardwareConcurrency": {
-            "mode": "literal",
-            "data": "8"
+            "mode": "regex",
+            "allowVacant": true,
+            "data": "(\\d+)?"
           },
           "doNotTrack": {
             "mode": "literal",
@@ -489,6 +506,7 @@
           },
           "oscpu": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "Linux x86_64"
           },
           "vendor": {
@@ -518,6 +536,7 @@
           },
           "appVersion": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "5.0 (Windows NT 6.3; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729; rv:11.0) like Gecko"
           },
           "browserLanguage": {
@@ -610,11 +629,13 @@
       "window": {
         "navigator": {
           "hardwareConcurrency": {
-            "mode": "literal",
-            "data": "8"
+            "mode": "regex",
+            "allowVacant": true,
+            "data": "(\\d+)?"
           },
           "appVersion": {
             "mode": "literal",
+            "allowVacant": true,
             "data": "5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
           },
           "product": {

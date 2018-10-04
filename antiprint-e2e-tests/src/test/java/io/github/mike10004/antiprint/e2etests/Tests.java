@@ -3,15 +3,12 @@ package io.github.mike10004.antiprint.e2etests;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
-import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.reflect.TypeToken;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import net.sf.uadetector.OperatingSystemFamily;
@@ -26,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -34,6 +32,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -78,14 +77,19 @@ public class Tests {
     }
 
     public static BrowserFingerprintTestCase getNavigatorTestCase(UserAgentFamily userAgentFamily, OperatingSystemFamily operatingSystemFamily) {
-        return getNavigatorTestCases(testCase -> {
+        Predicate<? super BrowserFingerprintTestCase> filter = testCase -> {
             return userAgentFamily == testCase.input.userAgentFamily && operatingSystemFamily == testCase.input.os;
-        }).stream()
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("no test cases for given requirements"));
+        };
+        List<BrowserFingerprintTestCase> cases = getNavigatorTestCases()
+                .stream()
+                .filter(filter)
+                .collect(Collectors.toList());
+        checkArgument(!cases.isEmpty(), "no cases match %s/%s", userAgentFamily, operatingSystemFamily);
+        checkArgument(cases.size() == 1, "multiple cases match %s/%s", userAgentFamily, operatingSystemFamily);
+        return cases.get(0);
     }
 
-    public static ImmutableList<BrowserFingerprintTestCase> getNavigatorTestCases(Predicate<? super BrowserFingerprintTestCase> filter) {
+    public static ImmutableList<BrowserFingerprintTestCase> getNavigatorTestCases() {
         try (Reader reader = Resources.asCharSource(Tests.class.getResource("/navigator-test-cases.json"), UTF_8).openStream()) {
             BrowserFingerprintTestCase testCases[] = new Gson().fromJson(reader, BrowserFingerprintTestCase[].class);
             checkState(testCases != null);
