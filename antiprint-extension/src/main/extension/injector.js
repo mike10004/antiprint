@@ -2,23 +2,41 @@ function injectProjection(projection) {
 
     const MODE_ALWAYS_REDEFINE = 'redefine';
     const MODE_REDEFINE_IF_PRESENT = 'maybeRedefine';
+    const MODE_UNDEFINE = 'undefine';
+
+    const DEFAULT_PROJECTOR = function(projection, property) {
+        return projection.navigator[property];
+    };
 
     class PropertySpec {
-        constructor(name, mode) {
+
+        constructor(name, mode, projector) {
             this.name = name;
             this.mode = mode || MODE_ALWAYS_REDEFINE;
+            this.projector = projector || DEFAULT_PROJECTOR;
+
         }
 
         shouldDefine(navigator) {
-            return this.mode === MODE_ALWAYS_REDEFINE || (this.mode === MODE_REDEFINE_IF_PRESENT && this.name in navigator);
+            return (this.mode === MODE_ALWAYS_REDEFINE)
+                || (this.mode === MODE_REDEFINE_IF_PRESENT && this.name in navigator)
+                || (this.mode === MODE_UNDEFINE && this.name in navigator);
+        }
+
+        project(projection, property) {
+            if (this.mode !== MODE_UNDEFINE) {
+                return this.projector(projection, property);
+            }
         }
     }
 
     const PROJECTED_NAVIGATOR_PROPERTIES = [
         new PropertySpec('platform'),
-        new PropertySpec('oscpu', MODE_REDEFINE_IF_PRESENT),
+        new PropertySpec('oscpu', MODE_UNDEFINE),
         new PropertySpec('buildID', MODE_REDEFINE_IF_PRESENT),
         new PropertySpec('appVersion', MODE_REDEFINE_IF_PRESENT),
+        new PropertySpec('webdriver', MODE_UNDEFINE),
+        new PropertySpec('buildID', MODE_UNDEFINE),
     ];
     const NOOP = x => {};
 
@@ -31,7 +49,7 @@ function injectProjection(projection) {
             try {
                 Object.defineProperty(navigator, property, {
                     get: function () {
-                        return projection.navigator[property];
+                        return propSpec.project(projection, property);
                     },
                     set: NOOP,
                     configurable: true
