@@ -17,6 +17,7 @@ function injectProjection(projection) {
     const PROJECTED_NAVIGATOR_PROPERTIES = [
         new PropertySpec('platform'),
         new PropertySpec('oscpu', MODE_REDEFINE_IF_PRESENT),
+        new PropertySpec('buildID', MODE_REDEFINE_IF_PRESENT),
         new PropertySpec('appVersion', MODE_REDEFINE_IF_PRESENT),
     ];
     const NOOP = x => {};

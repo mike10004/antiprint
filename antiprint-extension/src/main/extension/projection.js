@@ -1,7 +1,7 @@
 function SignatureCrafter(settings) {
 
     const KNOWN_LINUXEN = ['Ubuntu', 'Debian'];
-    const MAKE_EMPTY = ['oscpu', 'appVersion'];
+    const MAKE_EMPTY = ['oscpu', 'appVersion', 'buildID'];
     const userAgent = (settings || {})['userAgent'] || window.navigator.userAgent;
     const signature = UAParser(userAgent);
     const navigatorProjection = {};
