@@ -7,18 +7,19 @@ import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import net.sf.uadetector.OperatingSystemFamily;
-import net.sf.uadetector.ReadableUserAgent;
 import net.sf.uadetector.UserAgentFamily;
-import net.sf.uadetector.UserAgentStringParser;
-import net.sf.uadetector.service.UADetectorServiceFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -76,59 +77,22 @@ public class Tests {
         return new File(val);
     }
 
-    public static ImmutableList<File> getNavigatorTestCaseFiles() {
-        File dir = getParentBaseDir().toPath()
-                .resolve("antiprint-extension")
-                .resolve("src/test/resources")
-                .resolve("fixtures")
-                .toFile();
-        Collection<File> files = FileUtils.listFiles(dir, new String[]{"json"}, false);
-        return ImmutableList.copyOf(files);
-    }
-
-    public static Function<CharSource, Map<String, Object>> navigatorObjectLoader() {
-        return cs -> {
-            try {
-                try (Reader reader = cs.openStream()) {
-                    Map<String, Object> map = new Gson().fromJson(reader, new TypeToken<Map<String, Object>>(){}.getType());
-                    return Maps.transformValues(map, o -> {
-                        if (o instanceof Double) {
-                            Double d = (Double) o;
-                            if (d.longValue() == d.doubleValue()) {
-                                return d.longValue();
-                            }
-                        }
-                        return o;
-                    });
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
-    }
-
-    public static Map<String, Object> getNavigatorTestCase(UserAgentFamily userAgentFamily, OperatingSystemFamily operatingSystemFamily) {
-        return getNavigatorTestCasesByUserAgent(userAgent -> {
-            return userAgentFamily == userAgent.getFamily() && operatingSystemFamily == userAgent.getOperatingSystem().getFamily();
+    public static BrowserFingerprintTestCase getNavigatorTestCase(UserAgentFamily userAgentFamily, OperatingSystemFamily operatingSystemFamily) {
+        return getNavigatorTestCases(testCase -> {
+            return userAgentFamily == testCase.input.userAgentFamily && operatingSystemFamily == testCase.input.os;
         }).stream()
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("no test cases for given requirements"));
     }
 
-    public static ImmutableList<Map<String, Object>> getNavigatorTestCasesByUserAgent(Predicate<? super ReadableUserAgent> filter) {
-        UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
-        return getNavigatorTestCases(testCase -> {
-            ReadableUserAgent agent = parser.parse(testCase.get("userAgent").toString());
-            return filter.test(agent);
-        });
-    }
-
-    public static ImmutableList<Map<String, Object>> getNavigatorTestCases(Predicate<? super Map<String, Object>> filter) {
-        return getNavigatorTestCaseFiles().stream()
-                .map(file -> Files.asCharSource(file, UTF_8))
-                .map(navigatorObjectLoader())
-                .filter(filter)
-                .collect(ImmutableList.toImmutableList());
+    public static ImmutableList<BrowserFingerprintTestCase> getNavigatorTestCases(Predicate<? super BrowserFingerprintTestCase> filter) {
+        try (Reader reader = Resources.asCharSource(Tests.class.getResource("/navigator-test-cases.json"), UTF_8).openStream()) {
+            BrowserFingerprintTestCase testCases[] = new Gson().fromJson(reader, BrowserFingerprintTestCase[].class);
+            checkState(testCases != null);
+            return ImmutableList.copyOf(testCases);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static File getBuildDir() {
@@ -178,5 +142,26 @@ public class Tests {
                 return checkNotNull(fileEntries.get(fileEntry));
             }
         };
+    }
+
+    @Nullable
+    public static Object deserialize(JsonElement serialized) {
+        if (serialized.isJsonNull()) {
+            return null;
+        }
+        JsonPrimitive primitive = serialized.getAsJsonPrimitive();
+        if (primitive.isString()) {
+            return primitive.getAsString();
+        }
+        if (primitive.isBoolean()) {
+            return primitive.getAsBoolean();
+        }
+        checkState(primitive.isNumber());
+        Number number = primitive.getAsNumber();
+        if (number.longValue() == number.doubleValue()) {
+            return number.longValue();
+        } else {
+            return number.doubleValue();
+        }
     }
 }

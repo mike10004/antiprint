@@ -18,7 +18,7 @@ public class FirefoxDriverProviderTest extends BrowserUsingTestBase<ExtensibleFi
 
     @Test
     public void provide() throws Exception {
-        String userAgent = (String) Tests.getNavigatorTestCase(UserAgentFamily.FIREFOX, OperatingSystemFamily.OS_X).get("userAgent");
+        String userAgent = Tests.getNavigatorTestCase(UserAgentFamily.FIREFOX, OperatingSystemFamily.OS_X).input.userAgent;
         WebDriver driver = createWebDriver(Objects.requireNonNull(userAgent));
         try {
             driver.get("https://www.example.com/");
