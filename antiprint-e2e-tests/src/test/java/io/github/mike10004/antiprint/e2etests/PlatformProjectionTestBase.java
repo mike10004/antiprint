@@ -16,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,11 +37,7 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
         String userAgent = testCase.input.userAgent;
         WebDriver driver = createWebDriver(userAgent);
         try {
-            String html = Resources.asCharSource(getClass().getResource("/print-navigator.html"), UTF_8).read();
-            NanoServer server = NanoServer.builder()
-                    .get(request -> {
-                        return NanoResponse.status(200).htmlUtf8(html);
-                    }).build();
+            NanoServer server = buildPrintNavigatorServer();
             // the extension is only active if the page URL is http[s]
             try (NanoControl control = server.startServer()) {
                 driver.get(control.baseUri().toString());
@@ -67,6 +64,17 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
         } finally {
             driver.quit();
         }
+    }
+
+    static NanoServer buildPrintNavigatorServer() throws IOException {
+        String html = Resources.asCharSource(PlatformProjectionTestBase.class.getResource("/print-navigator.html"), UTF_8).read();
+        NanoServer server = NanoServer.builder()
+                .getPath("/", request -> {
+                    return NanoResponse.status(200).htmlUtf8(html);
+                })
+                .getPath("/favicon.ico", request -> NanoResponse.status(200).octetStream(new byte[0]))
+                .build();
+        return server;
     }
 
     private Map<String, Optional<Object>> parseNavigatorJson(String json) {
@@ -118,7 +126,12 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
                 BrowserFingerprintTestCase.RequiredValue requirement = entry.getValue();
                 System.out.format("%s = %s (expectation: %s)%n", k, actual.get(k), requirement.asPredicate());
                 // This treats the absence of a value the same as a present null value, which is not ideal, but it'll do for now
-                @Nullable Object actualValue = actual.get(k).orElse(null);
+                @Nullable Optional<Object> actualValueOpt = actual.get(k);
+                @Nullable Object actualValue = null;
+                //noinspection OptionalAssignedToNull
+                if (actualValueOpt != null) {
+                    actualValue = actualValueOpt.orElse(null);
+                }
                 @Nullable String actualValueStr = actualValue == null ? null : actualValue.toString();
                 Predicate<String> predicate = requirement.asPredicate();
                 boolean ok = predicate.test(actualValueStr);

@@ -1,7 +1,6 @@
 package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVReader;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -40,7 +39,7 @@ public class ChromeDriverProvider implements WebDriverProvider<ChromeDriver> {
     }
 
     @Override
-    public ChromeDriver provide(Map<String, String> environment) throws IOException {
+    public DriverPlusService<ChromeDriver> provideBoth(Map<String, String> environment) throws IOException {
         ChromeOptions options = new ChromeOptions();
         String[] extraChromeArgs = getExtraChromeArgs();
         options.addArguments(extraChromeArgs);
@@ -63,7 +62,7 @@ public class ChromeDriverProvider implements WebDriverProvider<ChromeDriver> {
         ChromeDriverService cds = new ChromeDriverService.Builder()
                 .withEnvironment(environment)
                 .build();
-        return new ChromeDriver(cds, options);
+        return new DriverPlusService<>(new ChromeDriver(cds, options), cds);
     }
 
     protected String[] getExtraChromeArgs() {

@@ -126,14 +126,17 @@ class BrowserFingerprintTestCase {
     public enum EvalMode {
         trivial,
         regex,
-        literal;
+        literal,
+        absent;
 
-        private static boolean isVacant(@Nullable Object value) {
-            return value == null || (value instanceof String && (((String)value).isEmpty()));
+        private static <T> Predicate<T> vacant(boolean allowVacant) {
+            return value -> allowVacant && (value == null || (value instanceof String && (((String)value).isEmpty())));
         }
 
         public Predicate<String> toPredicate(String data, boolean allowVacant) {
             switch (this) {
+                case absent:
+                    return new NamedPredicate<>("RequiredAbsent{}", Objects::isNull);
                 case trivial:
                     return named(data, x -> Boolean.parseBoolean(data), allowVacant);
                 case regex:
@@ -145,18 +148,32 @@ class BrowserFingerprintTestCase {
             }
         }
 
-        private <T> Predicate<T> named(String data, Predicate<T> predicate, boolean allowVacant) {
-            return new Predicate<T>() {
-                @Override
-                public boolean test(T t) {
-                    return (allowVacant && isVacant(t)) || predicate.test(t);
-                }
+        private static class NamedPredicate<T> implements Predicate<T> {
 
-                @Override
-                public String toString() {
-                    return String.format("%s%s{\"%s\"}", StringUtils.capitalize(name()), allowVacant ? "?" : "", StringEscapeUtils.escapeJava(data));
-                }
-            };
+            private final String name;
+            private final Predicate<T> delegate;
+
+            public NamedPredicate(String name, Predicate<T> delegate) {
+                this.name = name;
+                this.delegate = delegate;
+            }
+
+            @Override
+            public boolean test(T t) {
+                return delegate.test(t);
+            }
+
+            @Override
+            public String toString() {
+                return name;
+            }
+        }
+
+        private <T> Predicate<T> named(String data, Predicate<T> predicate, boolean allowVacant) {
+            String name = String.format("%s%s{\"%s\"}", StringUtils.capitalize(name()), allowVacant ? "?" : "", StringEscapeUtils.escapeJava(data));
+            Predicate<T> vacant = vacant(allowVacant);
+            predicate = vacant.or(predicate);
+            return new NamedPredicate<>(name, predicate);
         }
     }
 

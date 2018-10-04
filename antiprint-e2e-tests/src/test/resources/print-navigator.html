@@ -5,15 +5,42 @@
     <script>
         window.navigatorCopy = {};
         const NAVIGATOR_PROPS = [
-            "appCodeName", "appMinorVersion", "appName", "appVersion", "browserLanguage",
-            "buildID",  "cookieEnabled", "cpuClass", "doNotTrack", "hardwareConcurrency",
-            "language", "maxTouchPoints", "msManipulationViewsEnabled", "msMaxTouchPoints",
-            "msPointerEnabled", "onLine", "oscpu", "platform", "pointerEnabled",
-            "product", "productSub", "systemLanguage", "userAgent", "userLanguage",
-            "vendor", "vendorSub", "webdriver"];
+            "appCodeName",
+            "appMinorVersion",
+            "appName",
+            "appVersion",
+            "browserLanguage",
+            "buildID",
+            "cookieEnabled",
+            "cpuClass",
+            "doNotTrack",
+            "hardwareConcurrency",
+            "language",
+            "maxTouchPoints",
+            "msManipulationViewsEnabled",
+            "msMaxTouchPoints",
+            "msPointerEnabled",
+            "onLine",
+            "oscpu",
+            "platform",
+            "pointerEnabled",
+            "product",
+            "productSub",
+            "systemLanguage",
+            "userAgent",
+            "userLanguage",
+            "vendor",
+            "vendorSub",
+            "webdriver"
+        ];
         NAVIGATOR_PROPS.forEach(k => {
-            const v = window.navigator[k];
-            if (typeof v !== 'function' && typeof v !== 'object' && typeof v !== 'undefined') {
+            let v = window.navigator[k];
+            if (typeof v !== 'undefined') {
+                if (typeof v === 'function') {
+                    v = null;
+                } else if (typeof v === 'object' && v !== null) {
+                    v = JSON.stringify(v);
+                }
                 window.navigatorCopy[k] = v;
             }
         });
@@ -31,7 +58,7 @@
     <script>
         /*
          * You should never use document.write, unless it's in this very specific case,
-         * where we want to know what the browser before the DOM has loaded.
+         * where we want to know the browser state before the DOM has loaded.
          */
         document.write('\n<div id="content">');
         document.write(JSON.stringify(window.navigatorCopy, null, 2));
