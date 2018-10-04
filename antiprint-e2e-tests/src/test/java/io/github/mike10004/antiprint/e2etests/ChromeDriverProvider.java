@@ -39,10 +39,6 @@ public class ChromeDriverProvider implements WebDriverProvider<ChromeDriver> {
         this.crxProvider = checkNotNull(crxProvider);
     }
 
-    public ChromeDriver provide() throws IOException {
-        return provide(ImmutableMap.of());
-    }
-
     @Override
     public ChromeDriver provide(Map<String, String> environment) throws IOException {
         ChromeOptions options = new ChromeOptions();

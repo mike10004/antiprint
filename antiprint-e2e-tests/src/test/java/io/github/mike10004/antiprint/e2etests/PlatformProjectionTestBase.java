@@ -2,7 +2,6 @@ package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.base.Joiner;
 import com.google.common.io.Resources;
-import com.google.common.net.MediaType;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.mike10004.nanochamp.server.NanoControl;
@@ -17,7 +16,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -35,13 +34,13 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
         BrowserFingerprintTestCase testCase = Tests.getNavigatorTestCase(requiredUserAgentFamily, requiredOsFamily);
         System.out.format("%s/%s%nexpected navigator: %s%n", requiredUserAgentFamily, requiredOsFamily, Joiner.on(System.lineSeparator()).withKeyValueSeparator(" = ").join(testCase.output.window.navigator));
         String userAgent = testCase.input.userAgent;
-        byte[] html = Resources.toByteArray(getClass().getResource("/print-navigator.html"));
-        NanoServer server = NanoServer.builder()
-                .get(request -> {
-                    return NanoResponse.status(200).content(MediaType.HTML_UTF_8, html).build();
-                }).build();
         WebDriver driver = createWebDriver(userAgent);
         try {
+            String html = Resources.asCharSource(getClass().getResource("/print-navigator.html"), UTF_8).read();
+            NanoServer server = NanoServer.builder()
+                    .get(request -> {
+                        return NanoResponse.status(200).htmlUtf8(html);
+                    }).build();
             // the extension is only active if the page URL is http[s]
             try (NanoControl control = server.startServer()) {
                 driver.get(control.baseUri().toString());
@@ -132,7 +131,5 @@ public abstract class PlatformProjectionTestBase extends BrowserUsingTestBase<We
         }
 
     }
-
-
 
 }
