@@ -11,7 +11,7 @@ public abstract class BrowserUsingTestBase<W extends WebDriver, P> {
 
     protected static final boolean SHOW_BROWSER_WINDOW = false;
     protected static final boolean PAUSE_BEFORE_CLOSE = false;
-    protected static final int TIMEOUT_SECONDS = 15;
+    protected static final int TIMEOUT_SECONDS = Tests.getGlobalBrowserTestTimeout();
 
     @Rule
     public final XvfbRule xvfb = XvfbRule.builder()

@@ -1,6 +1,9 @@
 package io.github.mike10004.antiprint.e2etests;
 
 import com.google.common.base.Suppliers;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
@@ -15,6 +18,7 @@ import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -25,6 +29,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
@@ -171,11 +176,48 @@ public class Tests {
         }
     }
 
-    public static int getMediumTimeoutSeconds(int defaultValue) {
+    private static final String SYSPROP_ENV_BACKUP_PREFIX = "antiprint.env.";
+
+    private static final LoadingCache<String, Optional<String>> ENV_CACHE = CacheBuilder.newBuilder()
+            .build(new CacheLoader<String, Optional<String>>() {
+                @Override
+                public Optional<String> load(String envVarName) {
+                    String envVarValue = System.getenv(envVarName);
+                    if (envVarValue != null) {
+                        System.err.format("%s=%s (setting defined in environment)%n", envVarName, StringUtils.abbreviate(envVarValue, 64));
+                    } else {
+                        envVarValue = System.getProperty(SYSPROP_ENV_BACKUP_PREFIX + envVarName);
+                        if (envVarValue != null) {
+                            System.err.format("%s=%s (setting defined in system properties)%n", envVarName, StringUtils.abbreviate(envVarValue, 64));
+                        }
+                    }
+                    if (envVarValue == null) {
+                        System.err.format("%s is not defined in environment or as %s%s system properties%n", envVarName, SYSPROP_ENV_BACKUP_PREFIX, envVarName);
+                    }
+                    return Optional.ofNullable(envVarValue);
+                }
+            });
+
+    public static String getEnvironmentSetting(String envVarName, String defaultValue) {
+        return getEnvironmentSetting(envVarName, Function.identity(), defaultValue);
+    }
+
+    public static <T> T getEnvironmentSetting(String envVarName, Function<? super String, T> transform, T defaultValue) {
+        Optional<String> value = ENV_CACHE.getUnchecked(envVarName);
+        Optional<T> typedValue = Optional.empty();
         try {
-            return Integer.parseInt(System.getenv().getOrDefault(ENV_TIMEOUT_MEDIUM, String.valueOf(defaultValue)).trim());
-        } catch (RuntimeException ignore) {
+            typedValue = value.map(transform);
+        } catch (RuntimeException e) {
+            System.err.format("error transforming setting defined in environment: value %s caused %s%n", StringUtils.abbreviate(value.orElse(null), 64), e);
         }
-        return defaultValue;
+        return typedValue.orElse(defaultValue);
+    }
+
+    public static int getMediumTimeoutSeconds(int defaultValue) {
+        return getEnvironmentSetting(ENV_TIMEOUT_MEDIUM, Integer::parseInt, defaultValue);
+    }
+
+    public static int getGlobalBrowserTestTimeout() {
+        return getEnvironmentSetting("UNIT_TEST_WEB_GLOBAL_TIMEOUT_SECONDS", Integer::parseInt, 20);
     }
 }
