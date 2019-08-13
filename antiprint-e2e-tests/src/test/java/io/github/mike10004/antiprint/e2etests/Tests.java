@@ -39,6 +39,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Tests {
 
+    public static final String ENV_TIMEOUT_MEDIUM = "UNIT_TEST_TIMEOUT_MEDIUM_SECONDS";
+
     private static final Supplier<Properties> supplier = Suppliers.memoize(() -> {
         Properties p = new Properties();
         try (Reader reader = new InputStreamReader(Tests.class.getResourceAsStream("/tests.properties"), UTF_8)) {
@@ -167,5 +169,13 @@ public class Tests {
         } else {
             return number.doubleValue();
         }
+    }
+
+    public static int getMediumTimeoutSeconds(int defaultValue) {
+        try {
+            return Integer.parseInt(System.getenv().getOrDefault(ENV_TIMEOUT_MEDIUM, String.valueOf(defaultValue)).trim());
+        } catch (RuntimeException ignore) {
+        }
+        return defaultValue;
     }
 }

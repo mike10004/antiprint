@@ -12,6 +12,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import io.github.mike10004.nanochamp.server.NanoControl;
 import io.github.mike10004.nanochamp.server.NanoResponse;
 import io.github.mike10004.nanochamp.server.NanoServer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -92,15 +94,27 @@ public abstract class WebrtcIpLeakageTestBase extends BrowserUsingTestBase<WebDr
 
     static final String WEBRTC_REFLECTION_URL =  "https://mike10004.github.io/webrtc-ips/";
 
+    private static Function<WebDriver, String> elementTextGetter(String elementId) {
+        return new Function<WebDriver, String>() {
+            @Override
+            public String apply(WebDriver webDriver) {
+                return Strings.emptyToNull(webDriver.findElements(By.id(elementId)).stream().map(WebElement::getText).findFirst().orElse(null));
+            }
+
+            @Override
+            public String toString() {
+                return String.format("WebPageElementFinder{id=%s}", StringUtils.abbreviate(elementId, 64));
+            }
+        };
+    }
+
     private <T extends Closeable> void confirmNoLeakage(Fixture<T> fixture) throws Exception {
         WebDriver driver = createWebDriver(null);
         String rawInfo;
         try (T control = fixture.startServer()) {
             try {
                 fixture.visitPage(control, driver);
-                rawInfo = new WebDriverWait(driver, 5).until(driver_ -> {
-                    return Strings.emptyToNull(driver_.findElements(By.id("raw")).stream().map(WebElement::getText).findFirst().orElse(null));
-                });
+                rawInfo = new WebDriverWait(driver, Tests.getMediumTimeoutSeconds(5)).until(elementTextGetter("raw"));
                 maybePauseUntilKilled();
             } finally {
                 driver.quit();
@@ -114,4 +128,5 @@ public abstract class WebrtcIpLeakageTestBase extends BrowserUsingTestBase<WebDr
         Predicate<String> allowedIpAddresses = Predicates.in(ImmutableSet.of("127.0.0.1", "0.0.0.0", "127.0.1.1"));
         assertEquals("ip address in info", Collections.emptyList(), ipAddresses.stream().filter(allowedIpAddresses.negate()).collect(Collectors.toList()));
     }
+
 }
