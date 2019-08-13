@@ -91,14 +91,14 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.0</version>
+                    <version>3.0.0-M3</version>
                     <configuration>
                         <skipTests>${surefire.tests.skip}</skipTests>
                     </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.22.0</version>
+                    <version>3.0.0-M3</version>
                     <configuration>
                         <skipTests>${failsafe.tests.skip}</skipTests>
                     </configuration>
