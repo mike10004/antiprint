@@ -19,11 +19,16 @@ import net.sf.uadetector.UserAgentFamily;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -219,5 +224,43 @@ public class Tests {
 
     public static int getGlobalBrowserTestTimeout() {
         return getEnvironmentSetting("UNIT_TEST_WEB_GLOBAL_TIMEOUT_SECONDS", Integer::parseInt, 20);
+    }
+
+    public static void dumpPageSource(WebDriver webdriver, PrintStream out) {
+        try {
+            out.print(webdriver.getPageSource());
+        } catch (RuntimeException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    public static void dumpDom(WebDriver webdriver, PrintStream out) {
+        try {
+            String dom = (String) ((JavascriptExecutor)webdriver).executeScript("return document.documentElement.outerHTML");
+            out.print(dom);
+        } catch (RuntimeException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    public static void dumpScreenshot(WebDriver webdriver, Path pngFile) {
+        try {
+            byte[] pngBytes = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.BYTES);
+            java.nio.file.Files.write(pngFile, pngBytes);
+        } catch (IOException | RuntimeException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    public static void dumpAll(WebDriver webdriver, PrintStream out, Path pngFile) {
+        out.println(webdriver.getCurrentUrl());
+        out.println();
+        dumpPageSource(webdriver, out);
+        out.println();
+        out.println(webdriver.getCurrentUrl() + " DOM");
+        dumpDom(webdriver, out);
+        out.println();
+        dumpScreenshot(webdriver, pngFile);
+        out.format("%s contains screenshot%n", pngFile);
     }
 }

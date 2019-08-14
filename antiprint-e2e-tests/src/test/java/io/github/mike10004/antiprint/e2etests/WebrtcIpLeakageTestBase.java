@@ -12,6 +12,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import io.github.mike10004.nanochamp.server.NanoControl;
 import io.github.mike10004.nanochamp.server.NanoResponse;
 import io.github.mike10004.nanochamp.server.NanoServer;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.junit.Rule;
@@ -23,6 +24,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -109,13 +111,16 @@ public abstract class WebrtcIpLeakageTestBase extends BrowserUsingTestBase<WebDr
     }
 
     private <T extends Closeable> void confirmNoLeakage(Fixture<T> fixture) throws Exception {
-        WebDriver driver = createWebDriver(null);
         String rawInfo;
         try (T control = fixture.startServer()) {
+            WebDriver driver = createWebDriver(null);
             try {
                 fixture.visitPage(control, driver);
                 rawInfo = new WebDriverWait(driver, Tests.getMediumTimeoutSeconds(5)).until(elementTextGetter("raw"));
                 maybePauseUntilKilled();
+            } catch (org.openqa.selenium.TimeoutException e) {
+                Tests.dumpAll(driver, System.out, new File(FileUtils.getTempDirectory(), "screenshot-" + System.currentTimeMillis() + ".png").toPath());
+                throw e;
             } finally {
                 driver.quit();
             }
