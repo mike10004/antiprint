@@ -9,7 +9,8 @@ import org.openqa.selenium.WebDriver;
 public class ChromePlatformProjectionTest extends PlatformProjectionTestBase {
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUpClass() {
+        System.out.format("wdm.chromeDriverVersion=%s%n", System.getProperty("wdm.chromeDriverVersion"));
         Tests.setUpChromedriver();
     }
 

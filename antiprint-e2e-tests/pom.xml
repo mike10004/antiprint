@@ -17,6 +17,10 @@
         <extensible-firefox-driver.version>${selenium.version}x${project.version}</extensible-firefox-driver.version>
         <!--suppress CheckTagEmptyBody -->
         <chrome.extraArgs></chrome.extraArgs>
+        <!--suppress UnresolvedMavenProperty -->
+        <wdm.chromeDriverVersion>${env.CHROMEDRIVER_VERSION}</wdm.chromeDriverVersion>
+        <!--suppress UnresolvedMavenProperty -->
+        <wdm.geckoDriverVersion>${env.GECKODRIVER_VERSION}</wdm.geckoDriverVersion>
     </properties>
 
     <profiles>
@@ -24,6 +28,12 @@
             <id>show-browser-window</id>
             <properties>
                 <antiprint.tests.showBrowserWindow>true</antiprint.tests.showBrowserWindow>
+            </properties>
+        </profile>
+        <profile>
+            <id>chrome-76</id>
+            <properties>
+                <wdm.chromeDriverVersion>76.0.3809.126</wdm.chromeDriverVersion>
             </properties>
         </profile>
         <profile>
@@ -36,8 +46,6 @@
                             <configuration>
                                 <systemPropertyVariables>
                                     <antiprint.e2e.tests.allowOutdatedCrxFile>true</antiprint.e2e.tests.allowOutdatedCrxFile>
-                                    <antiprint-extension.version>${antiprint-extension.version}</antiprint-extension.version>
-                                    <extensible-firefox-driver.version>${extensible-firefox-driver.version}</extensible-firefox-driver.version>
                                 </systemPropertyVariables>
                             </configuration>
                         </plugin>
@@ -59,7 +67,14 @@
                             <antiprint.chrome.extraArgs>${chrome.extraArgs}</antiprint.chrome.extraArgs>
                             <antiprint.e2e.tests.allowOutdatedCrxFile>false</antiprint.e2e.tests.allowOutdatedCrxFile>
                             <antiprint.tests.showBrowserWindow>${antiprint.tests.showBrowserWindow}</antiprint.tests.showBrowserWindow>
-                            <wdm.chromeDriverVersion>76.0.3809.68</wdm.chromeDriverVersion>
+                            <antiprint-extension.version>${antiprint-extension.version}</antiprint-extension.version>
+                            <extensible-firefox-driver.version>${extensible-firefox-driver.version}</extensible-firefox-driver.version>
+                            <wdm.chromeDriverVersion>${wdm.chromeDriverVersion}</wdm.chromeDriverVersion>
+                            <wdm.geckoDriverVersion>${wdm.geckoDriverVersion}</wdm.geckoDriverVersion>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <wdm.gitHubTokenName>${env.GITHUB_TOKEN_NAME}</wdm.gitHubTokenName>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <wdm.gitHubTokenSecret>${env.GITHUB_TOKEN_SECRET}</wdm.gitHubTokenSecret>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

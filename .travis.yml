@@ -14,9 +14,5 @@ before_script: which firefox && firefox --version
 script: >-
   mvn --batch-mode $MAVEN_OPTIONS
   -Dantiprint.chrome.extraArgs=--no-sandbox
-  -Dwdm.gitHubTokenName=$GITHUB_TOKEN_NAME
-  -Dwdm.gitHubTokenSecret=$GITHUB_TOKEN_SECRET
   -Dwebdriver.firefox.bin=/usr/bin/firefox
-  -Dwdm.chromeDriverVersion=$CHROMEDRIVER_VERSION
-  -Dwdm.geckoDriverVersion=$GECKODRIVER_VERSION
   install
