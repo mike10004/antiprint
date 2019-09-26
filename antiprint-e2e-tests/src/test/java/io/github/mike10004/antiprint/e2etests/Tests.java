@@ -14,6 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
 import org.apache.commons.io.FileUtils;
@@ -103,7 +104,7 @@ public class Tests {
 
     public static ImmutableList<BrowserFingerprintTestCase> getNavigatorTestCases() {
         try (Reader reader = Resources.asCharSource(Tests.class.getResource("/navigator-test-cases.json"), UTF_8).openStream()) {
-            BrowserFingerprintTestCase testCases[] = new Gson().fromJson(reader, BrowserFingerprintTestCase[].class);
+            BrowserFingerprintTestCase[] testCases = new Gson().fromJson(reader, BrowserFingerprintTestCase[].class);
             checkState(testCases != null);
             return ImmutableList.copyOf(testCases);
         } catch (IOException e) {
@@ -116,11 +117,11 @@ public class Tests {
     }
 
     public static void setUpGeckodriver() {
-        FirefoxDriverManager.getInstance().setup();
+        WebDriverManager.firefoxdriver().setup();
     }
 
     public static void setUpChromedriver() {
-        ChromeDriverManager.getInstance().setup();
+        WebDriverManager.chromedriver().setup();
     }
 
     public static boolean filesEqual(Unzippage a, Unzippage b) throws IOException {

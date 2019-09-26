@@ -2,7 +2,7 @@ package io.github.mike10004.extensibleffdriver;
 
 import com.github.mike10004.xvfbtesting.XvfbRule;
 import com.google.common.net.MediaType;
-import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.mike10004.nanochamp.server.NanoControl;
 import io.github.mike10004.nanochamp.server.NanoResponse;
 import io.github.mike10004.nanochamp.server.NanoServer;
@@ -35,7 +35,7 @@ public class ExtensibleFirefoxDriverTest {
 
     @BeforeClass
     public static void setUpGeckodriver() {
-        FirefoxDriverManager.getInstance().setup();
+        WebDriverManager.firefoxdriver().setup();
     }
 
     @Test

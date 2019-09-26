@@ -5,19 +5,27 @@
     <parent>
         <artifactId>antiprint</artifactId>
         <groupId>com.github.mike10004</groupId>
-        <version>0.14</version>
+        <version>0.15-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>antiprint-e2e-tests</artifactId>
 
     <properties>
-        <chrome.extraArgs></chrome.extraArgs>
+        <antiprint.tests.showBrowserWindow>false</antiprint.tests.showBrowserWindow>
         <antiprint-extension.version>${project.version}</antiprint-extension.version>
         <extensible-firefox-driver.version>${selenium.version}x${project.version}</extensible-firefox-driver.version>
+        <!--suppress CheckTagEmptyBody -->
+        <chrome.extraArgs></chrome.extraArgs>
     </properties>
 
     <profiles>
+        <profile>
+            <id>show-browser-window</id>
+            <properties>
+                <antiprint.tests.showBrowserWindow>true</antiprint.tests.showBrowserWindow>
+            </properties>
+        </profile>
         <profile>
             <id>allow-outdated-crx</id>
             <build>
@@ -50,6 +58,8 @@
                             <antiprint.chrome.executablePath>${chrome.executablePath}</antiprint.chrome.executablePath>
                             <antiprint.chrome.extraArgs>${chrome.extraArgs}</antiprint.chrome.extraArgs>
                             <antiprint.e2e.tests.allowOutdatedCrxFile>false</antiprint.e2e.tests.allowOutdatedCrxFile>
+                            <antiprint.tests.showBrowserWindow>${antiprint.tests.showBrowserWindow}</antiprint.tests.showBrowserWindow>
+                            <wdm.chromeDriverVersion>76.0.3809.68</wdm.chromeDriverVersion>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

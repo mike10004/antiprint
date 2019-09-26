@@ -40,7 +40,7 @@ public class ExtensibleFirefoxDriver extends FirefoxDriver {
     /**
      * Installs an addon.
      * @param request installation request parameters
-     * @throws IOException
+     * @throws IOException on I/O error
      */
     public void installAddon(AddonInstallRequest request) throws IOException {
         addonSupport.installAddon(request);
@@ -49,7 +49,7 @@ public class ExtensibleFirefoxDriver extends FirefoxDriver {
     /**
      * Uninstalls an addon.
      * @param request uninstallation request parameters
-     * @throws IOException
+     * @throws IOException on I/O error
      */
     public void uninstallAddon(AddonUninstallRequest request) throws IOException {
         addonSupport.uninstallAddon(request);

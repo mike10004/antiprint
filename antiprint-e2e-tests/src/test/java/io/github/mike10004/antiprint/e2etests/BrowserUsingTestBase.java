@@ -9,7 +9,7 @@ import java.util.Map;
 
 public abstract class BrowserUsingTestBase<W extends WebDriver, P> {
 
-    protected static final boolean SHOW_BROWSER_WINDOW = false;
+    protected static final boolean SHOW_BROWSER_WINDOW = Boolean.parseBoolean(System.getProperty("antiprint.tests.showBrowserWindow"));
     protected static final boolean PAUSE_BEFORE_CLOSE = false;
     protected static final int TIMEOUT_SECONDS = Tests.getGlobalBrowserTestTimeout();
 

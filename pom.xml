@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mike10004</groupId>
     <artifactId>antiprint</artifactId>
-    <version>0.14</version>
+    <version>0.15-SNAPSHOT</version>
     <modules>
         <module>antiprint-extension</module>
         <module>antiprint-e2e-tests</module>
@@ -49,9 +49,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <chrome.executablePath></chrome.executablePath> <!-- empty means auto-detected by chromedriver -->
-        <selenium.version>3.14.0</selenium.version>
+        <selenium.version>3.141.59</selenium.version>
+        <xvfb-manager.version>0.19</xvfb-manager.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <common-helper.version>8.0.5</common-helper.version>
+        <common-helper.version>10.0.0</common-helper.version>
         <surefire.tests.skip>false</surefire.tests.skip>
         <failsafe.tests.skip>false</failsafe.tests.skip>
         <karma.tests.skip>false</karma.tests.skip>
@@ -71,7 +72,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.7.0</version>
+                    <version>3.8.1</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
@@ -88,6 +89,10 @@
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.0.1</version>
+                    <configuration>
+                        <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                        <source>8</source>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -218,12 +223,12 @@
             <dependency>
                 <groupId>io.github.bonigarcia</groupId>
                 <artifactId>webdrivermanager</artifactId>
-                <version>2.1.0</version>
+                <version>3.7.1</version>
             </dependency>
             <dependency>
                 <groupId>com.github.mike10004</groupId>
                 <artifactId>xvfb-testing</artifactId>
-                <version>0.16</version>
+                <version>${xvfb-manager.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
