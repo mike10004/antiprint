@@ -12,6 +12,7 @@
     <artifactId>antiprint-extension</artifactId>
     <packaging>pom</packaging>
     <properties>
+        <!--suppress UnresolvedMavenProperty -->
         <crx.packExtensionKey>${antiprint.crx.packExtensionKey}</crx.packExtensionKey>
         <crx.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.crx</crx.outputPathname>
         <zip.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.zip</zip.outputPathname>
@@ -53,8 +54,7 @@
                         <karmaExecutable>${project.basedir}/node_modules/.bin/karma</karmaExecutable>
                         <singleRun>true</singleRun>
                         <autoWatch>false</autoWatch>
-                        <reporters>dots,junit</reporters>
-                        <junitReportFile>${project.build.directory}/failsafe-reports/TEST-results-karma.xml</junitReportFile>
+                        <reporters>progress</reporters>
                     </configuration>
                 </plugin>
             </plugins>

@@ -78,17 +78,9 @@ module.exports = function(config) {
     plugins: [
         'karma-jasmine',
         'karma-chrome-launcher',
-        'karma-junit-reporter',
     ],
 
-    junitReporter : {
-        outputFile: 'target/karma-reports/TEST-results-karma.xml',
-        suite: 'unit'
-    },
-
-      // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true,
+    singleRun: false, // this is overridden (as true) when launched by Maven
 
     // Concurrency level
     // how many browser should be started simultaneous
