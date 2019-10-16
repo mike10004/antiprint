@@ -5,10 +5,10 @@
     <parent>
         <artifactId>antiprint</artifactId>
         <groupId>com.github.mike10004</groupId>
-        <version>0.15</version>
+        <version>0.16-SNAPSHOT</version>
     </parent>
     <artifactId>extensible-firefox-webdriver</artifactId>
-    <version>3.141.59x0.15</version>
+    <version>3.141.59x0.16-SNAPSHOT</version>
     <build>
         <pluginManagement>
             <plugins>
