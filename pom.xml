@@ -56,6 +56,7 @@
         <surefire.tests.skip>false</surefire.tests.skip>
         <failsafe.tests.skip>false</failsafe.tests.skip>
         <karma.tests.skip>false</karma.tests.skip>
+        <crxtool.version>0.15</crxtool.version>
     </properties>
     <profiles>
         <profile>
@@ -254,7 +255,7 @@
             <dependency>
                 <groupId>com.github.mike10004</groupId>
                 <artifactId>crxtool-core</artifactId>
-                <version>0.8</version>
+                <version>${crxtool.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

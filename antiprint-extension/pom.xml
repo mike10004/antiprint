@@ -123,7 +123,7 @@
             <plugin>
                 <groupId>com.github.mike10004</groupId>
                 <artifactId>crxtool-maven-plugin</artifactId>
-                <version>0.8</version>
+                <version>${crxtool.version}</version>
                 <executions>
                     <execution>
                         <id>create-crx</id>
