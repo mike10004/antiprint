@@ -6,15 +6,23 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Ordering;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import com.google.common.util.concurrent.AtomicLongMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.mike10004.crxtool.AsymmetricKeyProof;
+import io.github.mike10004.crxtool.AsymmetricKeyProofContainer;
+import io.github.mike10004.crxtool.CrxFileHeader;
+import io.github.mike10004.crxtool.CrxMetadata;
+import io.github.mike10004.crxtool.CrxParser;
+import io.github.mike10004.crxtool.CrxProofAlgorithm;
 import net.sf.uadetector.OperatingSystemFamily;
 import net.sf.uadetector.UserAgentFamily;
 import org.apache.commons.io.FileUtils;
@@ -28,6 +36,7 @@ import org.openqa.selenium.WebDriver;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -263,5 +272,43 @@ public class Tests {
         out.println();
         dumpScreenshot(webdriver, pngFile);
         out.format("%s contains screenshot%n", pngFile);
+    }
+
+    public static class ShowAntiprintExtensionInfo {
+
+        public static void main(String[] args) throws Exception {
+            File crxFile = ExtensionFileProvider.ofDependency(ExtensionFileFormat.CRX).provide();
+            dumpCrxInfo(crxFile, System.out);
+        }
+        public static void dumpCrxInfo(File crxFile, PrintStream out) throws IOException {
+            out.format("crx file: %s%n", crxFile);
+            dumpCrxInfo(Files.asByteSource(crxFile), out);
+        }
+
+        public static void dumpCrxInfo(ByteSource crxByteSource, PrintStream out) throws IOException {
+            try (InputStream in = crxByteSource.openStream()) {
+                CrxMetadata md = CrxParser.getDefault().parseMetadata(in);
+                out.format("version:    %s%n", md.getCrxVersion().identifier());
+                out.format("id:         %s%n", md.getId());
+                out.format("magic:      %s%n", md.getMagicNumber());
+                CrxFileHeader header = md.getFileHeader();
+                out.format("header len: %s%n", header.numBytes());
+                AtomicLongMap<CrxProofAlgorithm> algoCount = AtomicLongMap.create();
+                for (AsymmetricKeyProofContainer proofContainer : header.getAllAsymmetricKeyProofs()) {
+                    AsymmetricKeyProof proof = proofContainer.proof();
+                    long i = algoCount.getAndIncrement(proofContainer.algorithm());
+                    out.format("proof: %s %s len=%s%n", proofContainer.algorithm(), i, proof.getCombinedLength());
+                }
+                dumpZipInfo(in, out);
+            }
+        }
+
+        public static void dumpZipInfo(InputStream crxStreamAtZipPosition, PrintStream out) throws IOException {
+            Unzippage unzippage = Unzippage.unzip(crxStreamAtZipPosition);
+            List<String> zipEntries = Ordering.natural().immutableSortedCopy(unzippage.fileEntries());
+            for (String zipEntry : zipEntries) {
+                out.println(zipEntry);
+            }
+        }
     }
 }
