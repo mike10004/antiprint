@@ -12,8 +12,7 @@
     <artifactId>antiprint-extension</artifactId>
     <packaging>pom</packaging>
     <properties>
-        <!--suppress UnresolvedMavenProperty -->
-        <crx.packExtensionKey>${antiprint.crx.packExtensionKey}</crx.packExtensionKey>
+        <userExtensionKey.file>${user.home}/.ssh/antiprint-extension.pem</userExtensionKey.file>
         <crx.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.crx</crx.outputPathname>
         <zip.outputPathname>${project.build.directory}/${project.artifactId}-${project.version}.zip</zip.outputPathname>
         <karma.browser>ChromiumHeadlessDockerable</karma.browser>
@@ -30,6 +29,17 @@
             <properties>
                 <karma.browser>ChromeHeadless</karma.browser>
                 <bash.executable>C:/Program Files/Git/bin/bash.exe</bash.executable>
+            </properties>
+        </profile>
+        <profile>
+            <id>user-extension-key</id>
+            <activation>
+                <file>
+                    <exists>${userExtensionKey.file}</exists>
+                </file>
+            </activation>
+            <properties>
+                <crx.packExtensionKey>${userExtensionKey.file}</crx.packExtensionKey>
             </properties>
         </profile>
     </profiles>
@@ -121,12 +131,31 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>show-extension-key</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>extension key file: ${crx.packExtensionKey}</echo>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.github.mike10004</groupId>
                 <artifactId>crxtool-maven-plugin</artifactId>
                 <version>${crxtool.version}</version>
                 <executions>
                     <execution>
                         <id>create-crx</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>pack-extension</goal>
                         </goals>
@@ -137,6 +166,7 @@
                     </execution>
                     <execution>
                         <id>create-zip</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>pack-extension</goal>
                         </goals>
